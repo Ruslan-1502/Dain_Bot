@@ -1,2 +1,2 @@
 aiogram==2.15
-pysqlite3==0.4.6
+sqlite3==3.37.2
