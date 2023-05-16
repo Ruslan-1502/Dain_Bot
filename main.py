@@ -6,6 +6,7 @@ from aiogram.utils import executor
 
 from config import BOT_TOKEN, WEBHOOK_URL_PATH, WEBAPP_HOST, WEBAPP_PORT
 
+
 import fcntl
 import os
 import sys
@@ -34,9 +35,18 @@ def main():
     
     os.remove(lockfile)
 
+async def handle(request):
+    if request.match_info.get('token') == BOT_TOKEN:
+        update = types.Update.parse_raw(await request.read())
+        await dp.process_update(update)
+        return web.Response(text="OK")
+    else:
+        return web.Response(text="Invalid token")
+
+# Rest of your code...
+
 if __name__ == "__main__":
     main()
-
 
 # Создание базы данных
 import sqlite3
