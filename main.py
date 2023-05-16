@@ -32,7 +32,6 @@ async def on_startup_handler():
 async def on_shutdown(dispatcher):
     await dp.bot.delete_webhook()
 
-app = web.Application()
     
 # Создание базы данных
 import sqlite3
