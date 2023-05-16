@@ -7,6 +7,12 @@ from aiogram.utils import executor
 from config import BOT_TOKEN, WEBHOOK_URL, WEBAPP_HOST, WEBAPP_PORT,WEBHOOK_PATH,HEROKU_APP_NAME
 
 
+async def on_startup(dispatcher):
+    await dp.bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
+
+async def on_shutdown(dispatcher):
+    await dp.bot.delete_webhook()
+    
 # Создание базы данных
 import sqlite3
 conn = sqlite3.connect("users.db")
@@ -15,8 +21,8 @@ cursor.execute("""CREATE TABLE IF NOT EXISTS users
                   (id INTEGER PRIMARY KEY, username TEXT, uid INTEGER, ar INTEGER, nick TEXT, region TEXT)
                """)
 
-TOKEN = os.getenv('BOT_TOKEN')
-bot = Bot(token=BOT_TOKEN)
+TOKEN = 'BOT_TOKEN'
+bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
 
 def get_region(uid):
@@ -32,13 +38,6 @@ def get_region(uid):
     else:
         return "unknown"
     
-
-async def on_startup(dispatcher):
-    await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
-
-
-async def on_shutdown(dispatcher):
-    await bot.delete_webhook()
 
 async def handle(request):
     if request.match_info.get('token') == BOT_TOKEN:
