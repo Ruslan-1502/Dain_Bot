@@ -1,27 +1,12 @@
 import os
+import asyncio
 from aiohttp import web
 from aiogram import Bot, Dispatcher, types
 from aiogram.dispatcher.webhook import SendMessage
 from aiogram.utils import executor
-
 from config import BOT_TOKEN, WEBHOOK_URL, WEBAPP_HOST, WEBAPP_PORT,WEBHOOK_PATH,HEROKU_APP_NAME
 
-
-async def on_startup(dispatcher):
-    await dp.bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
-
-async def on_shutdown(dispatcher):
-    await dp.bot.delete_webhook()
-    
-# Создание базы данных
-import sqlite3
-conn = sqlite3.connect("users.db")
-cursor = conn.cursor()
-cursor.execute("""CREATE TABLE IF NOT EXISTS users
-                  (id INTEGER PRIMARY KEY, username TEXT, uid INTEGER, ar INTEGER, nick TEXT, region TEXT)
-               """)
-
-TOKEN = 'BOT_TOKEN'
+TOKEN = BOT_TOKEN
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
 
@@ -38,11 +23,30 @@ def get_region(uid):
     else:
         return "unknown"
     
+async def on_startup(dispatcher):
+    await dp.bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
+    
+async def on_startup_handler():
+    await on_startup(dp)
+    
+async def on_shutdown(dispatcher):
+    await dp.bot.delete_webhook()
+    
+# Создание базы данных
+import sqlite3
+conn = sqlite3.connect("users.db")
+cursor = conn.cursor()
+cursor.execute("""CREATE TABLE IF NOT EXISTS users
+                  (id INTEGER PRIMARY KEY, username TEXT, uid INTEGER, ar INTEGER, nick TEXT, region TEXT)
+               """)
 
+async def process_telegram_update(update):
+    await dp.process_update(update)
+    
 async def handle(request):
     if request.match_info.get('token') == BOT_TOKEN:
-        update = types.Update.parse_raw(await request.read())
-        await dp.process_update(update)
+        update = types.Update.parse_raw(await request.read())  
+        await process_telegram_update(update)
         return web.Response(text="OK")
     else:
         return web.Response(text="Invalid token")
@@ -138,5 +142,5 @@ app = web.Application()
 app.add_routes([web.post('/{token}', handle)])
 
 if __name__ == '__main__':
-    executor.start_polling(dp, on_startup=on_startup, on_shutdown=on_shutdown)
+    asyncio.run(on_startup_handler())
     web.run_app(app, host=WEBAPP_HOST, port=WEBAPP_PORT)
