@@ -7,47 +7,6 @@ from aiogram.utils import executor
 from config import BOT_TOKEN, WEBHOOK_URL_PATH, WEBAPP_HOST, WEBAPP_PORT
 
 
-import fcntl
-import os
-import sys
-
-lockfile = "/tmp/bot.lock"
-
-def check_lock():
-    try:
-        lock_fd = open(lockfile, "w")
-        fcntl.lockf(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-    except IOError:
-        print("Другой экземпляр бота уже запущен.")
-        sys.exit(1)
-
-def main():
-    check_lock()
-
-    # Создание базы данных и другой ваш код
-
-    app = web.Application()
-    app.add_routes([web.post('/{token}', handle)])
-
-    if __name__ == '__main__':
-        executor.start_polling(dp, on_startup=on_startup, on_shutdown=on_shutdown)
-        web.run_app(app, host=WEBAPP_HOST, port=WEBAPP_PORT)
-    
-    os.remove(lockfile)
-
-async def handle(request):
-    if request.match_info.get('token') == BOT_TOKEN:
-        update = types.Update.parse_raw(await request.read())
-        await dp.process_update(update)
-        return web.Response(text="OK")
-    else:
-        return web.Response(text="Invalid token")
-
-# Rest of your code...
-
-if __name__ == "__main__":
-    main()
-
 # Создание базы данных
 import sqlite3
 conn = sqlite3.connect("users.db")
