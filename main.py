@@ -31,6 +31,8 @@ async def on_startup_handler():
     
 async def on_shutdown(dispatcher):
     await dp.bot.delete_webhook()
+
+app = web.Application()
     
 # Создание базы данных
 import sqlite3
@@ -43,10 +45,12 @@ cursor.execute("""CREATE TABLE IF NOT EXISTS users
 async def process_telegram_update(update):
     await dp.process_update(update)
     
+
 async def handle(request):
     if request.match_info.get('token') == BOT_TOKEN:
-        update = types.Update.parse_raw(await request.read())  
-        await process_telegram_update(update)
+        data = await request.json()
+        update = types.Update(**data)
+        await dp.process_update(update)
         return web.Response(text="OK")
     else:
         return web.Response(text="Invalid token")
