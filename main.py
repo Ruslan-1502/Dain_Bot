@@ -1,10 +1,12 @@
 import os
+import logging
 from aiohttp import web
 from aiogram import Bot, Dispatcher, types
 from aiogram.dispatcher.webhook import SendMessage
 from aiogram.utils import executor
+from aiogram.utils.executor import start_webhook
 
-from config import BOT_TOKEN, WEBHOOK_URL_PATH, WEBAPP_HOST, WEBAPP_PORT
+from config import BOT_TOKEN, WEBHOOK_URL, WEBAPP_HOST, WEBAPP_PORT,WEBHOOK_PATH,HEROKU_APP_NAME
 
 
 # Создание базы данных
@@ -15,6 +17,7 @@ cursor.execute("""CREATE TABLE IF NOT EXISTS users
                   (id INTEGER PRIMARY KEY, username TEXT, uid INTEGER, ar INTEGER, nick TEXT, region TEXT)
                """)
 
+TOKEN = os.getenv('BOT_TOKEN')
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
 
@@ -31,11 +34,12 @@ def get_region(uid):
     else:
         return "unknown"
     
-async def on_startup(app):
-    await bot.delete_webhook()
-    await bot.set_webhook(WEBHOOK_URL_PATH)
 
-async def on_shutdown(app):
+async def on_startup(dispatcher):
+    await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
+
+
+async def on_shutdown(dispatcher):
     await bot.delete_webhook()
 
 async def handle(request):
@@ -137,5 +141,13 @@ app = web.Application()
 app.add_routes([web.post('/{token}', handle)])
 
 if __name__ == '__main__':
-    executor.start_polling(dp, on_startup=on_startup, on_shutdown=on_shutdown)
-    web.run_app(app, host=WEBAPP_HOST, port=WEBAPP_PORT)
+    logging.basicConfig(level=logging.INFO)
+    start_webhook(
+        dispatcher=dp,
+        webhook_path=WEBHOOK_PATH,
+        skip_updates=True,
+        on_startup=on_startup,
+        on_shutdown=on_shutdown,
+        host=WEBAPP_HOST,
+        port=WEBAPP_PORT,
+    )
