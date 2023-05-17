@@ -4,7 +4,7 @@ from aiohttp import web
 from aiogram import Bot, Dispatcher, types
 from aiogram.dispatcher.webhook import SendMessage
 from aiogram.utils import executor
-from config import BOT_TOKEN, WEBHOOK_URL, WEBAPP_HOST, WEBAPP_PORT,WEBHOOK_PATH,HEROKU_APP_NAME
+from config import BOT_TOKEN, WEBHOOK_URL, WEBAPP_HOST, WEBAPP_PORT,WEBHOOK_PATH
 
 TOKEN = BOT_TOKEN
 bot = Bot(token=TOKEN)
@@ -145,6 +145,4 @@ app = web.Application()
 app.add_routes([web.post('/{token}', handle)])
 
 if __name__ == '__main__':
-    from aiogram import executor
-    from aiohttp import web
     executor.start_webhook(dispatcher=dp, webhook_path=WEBHOOK_PATH, on_startup=on_startup, on_shutdown=on_shutdown, host=WEBAPP_HOST, port=WEBAPP_PORT)
