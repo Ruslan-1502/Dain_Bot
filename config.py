@@ -1,6 +1,6 @@
 import os
 
-HEROKU_APP_NAME = os.getenv('dain')
+HEROKU_APP_NAME = 'dain'
 BOT_TOKEN = '5905267839:AAGjbqOOXQlSAPYPQZj7TWx5rCf-DDWeDT0'
 WEBHOOK_URL = f'https://dain.herokuapp.com/webhook/5905267839:AAGjbqOOXQlSAPYPQZj7TWx5rCf-DDWeDT0'
 WEBAPP_HOST = '0.0.0.0'
