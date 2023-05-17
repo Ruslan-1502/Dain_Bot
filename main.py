@@ -54,16 +54,9 @@ async def handle(request):
     else:
         return web.Response(text="Invalid token")
 
-async def add_uid_callback(query: types.CallbackQuery):
-    await bot.answer_callback_query(query.id)
-    await bot.send_message(chat_id=query.from_user.id, text="Пожалуйста, отправьте свой UID, AR и ник в игре в формате:\nUID AR Nick\nПример: `123456789 45 Player`")
-
-async def donate_callback(query: types.CallbackQuery):
-    await query.message.answer(text="https://t.me/genshin_donation/6")
-
 async def start_command(message: types.Message):
     button_add = types.KeyboardButton('Добавить UID')
-    button_donate = types.KeyboardButton('Донат')
+    button_donate = types.KeyboardButton('Донат'url="https://t.me/genshin_donation/6")
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True).add(button_add, button_donate)
     start_text = (
         "Добро пожаловать! Воспользуйтесь кнопками ниже или командами:\n\n"
@@ -72,6 +65,13 @@ async def start_command(message: types.Message):
         "/uid <region> - Показать список игроков для указанного региона (america, europe, asia, sar)\n"
     )
     await message.answer(start_text, reply_markup=keyboard)
+
+async def add_uid_callback(query: types.CallbackQuery):
+    await bot.answer_callback_query(query.id)
+    await bot.send_message(chat_id=query.from_user.id, text="Пожалуйста, отправьте свой UID, AR и ник в игре в формате:\nUID AR Nick\nПример: `123456789 45 Player`")
+
+async def donate_callback(query: types.CallbackQuery):
+    await query.message.answer(text="https://t.me/genshin_donation/6")
 
 async def uid_command(message: types.Message):
     args = message.get_args().split()
