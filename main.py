@@ -101,10 +101,10 @@ async def start_command_handler(message: types.Message):
 async def uid_command_handler(message: types.Message):
     await uid_command(message)
 
-@dp.callback_query_handler(lambda c: c.data == "donate")
-async def donate_callback_handler(callback_query: types.CallbackQuery):
-    await callback_query.answer()
-    await bot.send_message(chat_id=callback_query.from_user.id, text="https://t.me/genshin_donation/6")
+@dp.message_handler(lambda message: message.text == 'Донат')
+async def donate_handler(message: types.Message):
+    await message.answer('https://t.me/genshin_donation/6')
+    # здесь можно добавить код для выполнения других действий при нажатии на кнопку "Донат"
 
 @dp.message_handler(lambda message: message.text.startswith("/delete"))
 async def delete_handler(message: types.Message):
