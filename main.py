@@ -93,7 +93,6 @@ async def uid_command(message: types.Message):
 
     await message.answer(output, parse_mode=types.ParseMode.MARKDOWN_V2)
 
-
 @dp.message_handler(commands=['start'])
 async def start_command_handler(message: types.Message):
     await start_command(message)
