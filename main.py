@@ -66,12 +66,6 @@ async def start_command(message: types.Message):
     )
     await message.answer(start_text, reply_markup=keyboard)
 
-async def add_uid_callback(query: types.CallbackQuery):
-    await bot.answer_callback_query(query.id)
-    await bot.send_message(chat_id=query.from_user.id, text="Пожалуйста, отправьте свой UID, AR и ник в игре в формате:\nUID AR Nick\nПример: `123456789 45 Player`")
-
-async def donate_callback(query: types.CallbackQuery):
-    await query.message.answer(text="https://t.me/genshin_donation/6")
 
 async def uid_command(message: types.Message):
     args = message.get_args().split()
@@ -99,13 +93,6 @@ async def uid_command(message: types.Message):
 
     await message.answer(output, parse_mode=types.ParseMode.MARKDOWN_V2)
 
-@dp.callback_query_handler(lambda c: c.data == "add_uid")
-async def add_uid_callback_handler(callback_query: types.CallbackQuery):
-    await add_uid_callback(callback_query)
-
-@dp.callback_query_handler(lambda c: c.data == "donate")
-async def donate_callback_handler(callback_query: types.CallbackQuery):
-    await donate_callback(callback_query)
 
 @dp.message_handler(commands=['start'])
 async def start_command_handler(message: types.Message):
