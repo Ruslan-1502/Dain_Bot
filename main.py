@@ -56,7 +56,7 @@ async def handle(request):
 
 async def start_command(message: types.Message):
     button_add = types.KeyboardButton('Добавить UID')
-    button_donate = types.KeyboardButton('Донат'url="https://t.me/genshin_donation/6")
+    button_donate = types.KeyboardButton('Донат',url="https://t.me/genshin_donation/6")
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True).add(button_add, button_donate)
     start_text = (
         "Добро пожаловать! Воспользуйтесь кнопками ниже или командами:\n\n"
