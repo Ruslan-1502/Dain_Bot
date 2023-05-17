@@ -56,7 +56,7 @@ async def handle(request):
 
 async def start_command(message: types.Message):
     button_add = types.KeyboardButton('Добавить UID')
-    button_donate = types.KeyboardButton('Донат',url="https://t.me/genshin_donation/6")
+    button_donate = types.KeyboardButton('Донат')
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True).add(button_add, button_donate)
     start_text = (
         "Добро пожаловать! Воспользуйтесь кнопками ниже или командами:\n\n"
@@ -100,6 +100,11 @@ async def start_command_handler(message: types.Message):
 @dp.message_handler(commands=["uid"])
 async def uid_command_handler(message: types.Message):
     await uid_command(message)
+
+@dp.callback_query_handler(lambda c: c.data == "donate")
+async def donate_callback_handler(callback_query: types.CallbackQuery):
+    await callback_query.answer()
+    await bot.send_message(chat_id=callback_query.from_user.id, text="https://t.me/genshin_donation/6")
 
 @dp.message_handler(lambda message: message.text.startswith("/delete"))
 async def delete_handler(message: types.Message):
