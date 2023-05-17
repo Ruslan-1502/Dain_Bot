@@ -46,14 +46,6 @@ async def process_telegram_update(update):
     await dp.process_update(update)
     
 
-async def handle(request):
-    if request.match_info.get('token') == BOT_TOKEN:
-        data = await request.json()
-        update = types.Update(**data)
-        await dp.process_update(update)
-        return web.Response(text="OK")
-    else:
-        return web.Response(text="Invalid token")
 
 def get_main_keyboard():
     keyboard = types.InlineKeyboardMarkup()
@@ -144,6 +136,14 @@ async def process_uid_message(message: types.Message):
     conn.commit()
     await message.reply("Ваш UID, AR и ник успешно добавлены в список.")
 
+async def handle(request):
+    if request.match_info.get('token') == BOT_TOKEN:
+        data = await request.json()
+        update = types.Update(**data)
+        await dp.process_update(update)
+        return web.Response(text="OK")
+    else:
+        return web.Response(text="Invalid token")
 
 
 if __name__ == '__main__':
