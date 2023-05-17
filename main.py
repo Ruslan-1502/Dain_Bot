@@ -147,6 +147,4 @@ app.add_routes([web.post('/{token}', handle)])
 if __name__ == '__main__':
     from aiogram import executor
     from aiohttp import web
-    app = web.Application()
-    app.add_routes([web.post('/{token}', handle)])
     executor.start_webhook(dispatcher=dp, webhook_path=WEBHOOK_PATH, on_startup=on_startup, on_shutdown=on_shutdown, host=WEBAPP_HOST, port=WEBAPP_PORT)
