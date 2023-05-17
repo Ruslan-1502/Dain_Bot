@@ -46,11 +46,10 @@ async def process_telegram_update(update):
     await dp.process_update(update)
     
 
-
 def get_main_keyboard():
     keyboard = types.InlineKeyboardMarkup()
-    add_uid_button = types.InlineKeyboardButton("Добавить UID", callback_data="add_uid")
-    donate_button = types.InlineKeyboardButton("Донат", callback_data="donate")
+    add_uid_button = types.InlineKeyboardButton(text="Добавить UID", callback_data="add_uid")
+    donate_button = types.InlineKeyboardButton(text="Донат", callback_data="donate")
     keyboard.add(add_uid_button, donate_button)
     return keyboard
 
