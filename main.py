@@ -6,6 +6,7 @@ from aiogram.types import ParseMode
 from aiogram.dispatcher.webhook import SendMessage
 from aiogram.utils import executor
 from config import BOT_TOKEN, WEBHOOK_URL, WEBAPP_HOST, WEBAPP_PORT,WEBHOOK_PATH
+from aiogram.dispatcher.filters import Text
 
 TOKEN = BOT_TOKEN
 bot = Bot(token=TOKEN)
@@ -46,12 +47,12 @@ async def process_telegram_update(update):
     await dp.process_update(update)
     
 
-# def get_main_keyboard():
-#     keyboard = types.InlineKeyboardMarkup()
-#     add_uid_button = types.InlineKeyboardButton(text="Добавить UID", callback_data="add_uid")
-#     donate_button = types.InlineKeyboardButton(text="Донат", callback_data="donate")
-#     keyboard.add(add_uid_button, donate_button)
-#     return keyboard
+def get_main_keyboard():
+    keyboard = types.InlineKeyboardMarkup()
+    add_uid_button = types.InlineKeyboardButton(text="Добавить UID", callback_data="add_uid")
+    donate_button = types.InlineKeyboardButton(text="Донат", callback_data="donate")
+    keyboard.add(add_uid_button, donate_button)
+    return keyboard
 
 @dp.message_handler(commands=['start'])
 async def start(message: types.Message):
@@ -65,7 +66,12 @@ async def start(message: types.Message):
         "/uid <region> - Показать список игроков для указанного региона (america, europe, asia, sar)\n"
     )
     #keyboard = get_main_keyboard()
-     await message.reply(start_text, reply_markup=keyboard)
+     await message.reply(start_text, reply_markup=keyboard,)
+     
+@dp.message_handler(Text(text='Донат'))
+async def donate_handler(message: types.Message):
+    await message.reply("https://t.me/genshin_donation/6")
+   # await callback_query.message.reply("https://t.me/genshin_donation/6")
     
 @dp.callback_query_handler(lambda c: c.data == "add_uid")
 async def add_uid_callback(callback_query: types.CallbackQuery):
