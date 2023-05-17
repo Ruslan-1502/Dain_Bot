@@ -59,9 +59,8 @@ async def add_uid_callback(query: types.CallbackQuery):
     await bot.send_message(chat_id=query.from_user.id, text="Пожалуйста, отправьте свой UID, AR и ник в игре в формате:\nUID AR Nick\nПример: `123456789 45 Player`")
 
 async def donate_callback(query: types.CallbackQuery):
-    await bot.answer_callback_query(query.id)
-    await bot.send_message(chat_id=query.from_user.id, text="https://t.me/genshin_donation/6")
-
+    await query.message.answer(text="https://t.me/genshin_donation/6")
+    
 async def start_command(message: types.Message):
     button_add = types.KeyboardButton('Добавить UID')
     button_donate = types.KeyboardButton('Донат')
