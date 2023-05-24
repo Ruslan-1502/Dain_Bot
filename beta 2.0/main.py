@@ -4,27 +4,18 @@ from aiohttp import web
 from aiogram import Bot, Dispatcher, types
 from aiogram.dispatcher.webhook import SendMessage
 from aiogram.utils import executor
-import logging
-from aiogram.contrib.middlewares.logging import LoggingMiddleware
-from aiogram.types import ParseMode
+from flask import Flask
+from flask import request
+from flask import Response
+from flask_sslify import SSLify
+
 from config import BOT_TOKEN, WEBHOOK_URL, WEBAPP_HOST, WEBAPP_PORT,WEBHOOK_PATH
 
 TOKEN = BOT_TOKEN
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
-GROUP_ID = -1001683783876
-dp.middleware.setup(LoggingMiddleware())
-
-logging.basicConfig(level=logging.INFO)
-
-async def on_startup(dispatcher):
-    await dp.bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
-    
-async def on_startup_handler():
-    await on_startup(dp)
-    
-async def on_shutdown(dispatcher):
-    await dp.bot.delete_webhook()
+app = Flask(__name__)
+sslify = SSLify(app)
 
 def get_region(uid):
     first_digit = int(str(uid)[0])
@@ -39,6 +30,14 @@ def get_region(uid):
     else:
         return "unknown"
     
+async def on_startup(dispatcher):
+    await dp.bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
+    
+async def on_startup_handler():
+    await on_startup(dp)
+    
+async def on_shutdown(dispatcher):
+    await dp.bot.delete_webhook()
 
     
 # Создание базы данных
@@ -62,34 +61,26 @@ async def handle(request):
     else:
         return web.Response(text="Invalid token")
 
-
-
 async def start_command(message: types.Message):
-    user_id = message.from_user.id
-    chat_member = await bot.get_chat_member(chat_id=GROUP_ID, user_id=user_id)
-
-    if chat_member.status in {'member', 'administrator', 'creator'}:
-        button_add = types.KeyboardButton('Добавить UID')
-        button_donate = types.KeyboardButton('Донат')
-        keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True).add(button_add, button_donate)
-        start_text = (
+    button_add = types.KeyboardButton('Добавить UID')
+    button_donate = types.KeyboardButton('Донат')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True).add(button_add, button_donate)
+    start_text = (
         "Добро пожаловать! Воспользуйтесь кнопками ниже или командами:\n\n"
         "/uid - Показать список всех игроков\n"
         "/uid @nickname - Показать информацию об игроке с данным ником\n"
-        "/uid <region> - Показать список игроков для указанного региона (america, europe, asia, sar)\n")
-        await message.reply(start_text, reply_markup=keyboard)
-    else:
-        await message.reply(f"Присоединитесь к этой группе, чтобы использовать бота: https://t.me/genshinimpact_uzb")
+        "/uid <region> - Показать список игроков для указанного региона (america, europe, asia, sar)\n"
+    )
+    await message.answer(start_text, reply_markup=keyboard)
+
 
 async def uid_command(message: types.Message):
     args = message.get_args().split()
-    show_details = False
-    if len(args) == 0: 
-        cursor.execute("SELECT * FROM users ORDER BY ar DESC LIMIT 4")
+    if len(args) == 0:
+        cursor.execute("SELECT * FROM users ORDER BY ar DESC")
     elif len(args) == 1 and args[0].startswith("@"):
         username = args[0][1:]
         cursor.execute("SELECT * FROM users WHERE username=?", (username,))
-        show_details = True
     elif len(args) == 1:
         region = args[0]
         cursor.execute("SELECT * FROM users WHERE region=? ORDER BY ar DESC", (region,))
@@ -106,12 +97,8 @@ async def uid_command(message: types.Message):
     for row in result:
         ar, uid, nick = row[3], row[2], row[4]
         output += f"AR: {ar} UID: `{uid}` Nick: {nick}\n"
-        if show_details:
-            output += f"[Подробнее](https://enka.network/u/{uid})\n"
-    output += f"[Добавить свой UID](https://t.me/Dainsleifuz_bot)"
 
     await message.answer(output, parse_mode=types.ParseMode.MARKDOWN_V2)
-
 
 @dp.message_handler(commands=['start'])
 async def start_command_handler(message: types.Message):
@@ -135,9 +122,6 @@ async def delete_handler(message: types.Message):
 
 @dp.message_handler()
 async def process_uid_message(message: types.Message):
-    if message.chat.type != "private":
-        return
-
     try:
         uid, ar, nick = message.text.split()
         uid, ar = int(uid), int(ar)
@@ -155,16 +139,6 @@ async def process_uid_message(message: types.Message):
     await message.answer("Ваш UID, AR и ник успешно добавлены в список.")
 
 
-# Для Ноута
-# if __name__ == '__main__':
-#     from aiogram import executor
-#     executor.start_polling(dp, skip_updates=True)
 
-
-# Для сервера
 if __name__ == '__main__':
     executor.start_webhook(dispatcher=dp, webhook_path=WEBHOOK_PATH, on_startup=on_startup, on_shutdown=on_shutdown, host=WEBAPP_HOST, port=WEBAPP_PORT)
-
-
-
-
