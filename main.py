@@ -159,16 +159,4 @@ async def process_uid_message(message: types.Message):
 
 # Для сервера
 if __name__ == '__main__':
-    app = web.Application()
-    app.router.add_route("POST", WEBHOOK_PATH, handle)
-
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(on_startup(dp))
-
-    try:
-        web.run_app(app, host=WEBAPP_HOST, port=WEBAPP_PORT)
-    except KeyboardInterrupt:
-        pass
-    finally:
-        loop.run_until_complete(on_shutdown(dp))
-
+    executor.start_webhook(dispatcher=dp, webhook_path=WEBHOOK_PATH, on_startup=on_startup, on_shutdown=on_shutdown, host=WEBAPP_HOST, port=WEBAPP_PORT)
