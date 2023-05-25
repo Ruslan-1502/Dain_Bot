@@ -1,1 +1,1 @@
-web: python main.py --workers=4 && ./restart.sh
+web: python main.py
