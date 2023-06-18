@@ -292,7 +292,7 @@ async def update_usernames():
 
 async def backup_db():
     while True:
-        await asyncio.sleep(60 * 60)  # Sleep for 48 hours
+        await asyncio.sleep(1 * 60 * 60)  # Sleep for 48 hours
         await bot.send_document(CHAT_ID, open('users.db', 'rb'))
 
 
