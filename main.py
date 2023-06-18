@@ -110,7 +110,14 @@ async def uid_command(message: types.Message):
 
 
 #`{uid}`
-
+@dp.message_handler(commands=['update'])
+async def update_handler(message: types.Message):
+    try:
+        with open('users.db', 'rb') as db_file:
+            await bot.send_document(CHAT_ID, db_file)
+        await message.reply('База данных успешно отправлена!')
+    except Exception as e:
+        await message.reply(f'Произошла ошибка при отправке базы данных: {str(e)}')
 
 # Обработчик команды /saytlar
 @dp.message_handler(commands=['saytlar'])
