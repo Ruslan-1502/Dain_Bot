@@ -110,6 +110,14 @@ async def uid_command(message: types.Message):
 
 
 #`{uid}`
+@dp.message_handler(commands=['update'])
+async def update_handler(message: types.Message):
+    await update_users_info()
+    await update_usernames()
+    await message.reply('Обновление пользовательской информации выполнено.')
+
+
+
 @dp.message_handler(commands=['db'])
 async def update_handler(message: types.Message):
     try:
@@ -234,69 +242,62 @@ async def process_input_handler(message: types.Message):
     else:
         await message.reply("UID не существует или уже добавлен в базу данных.")
 
-import time
 async def update_users_info():
-    while True:
-        await asyncio.sleep(48 * 60 * 60)  # Sleep for 48 hours
+    # Fetch all users from the database
+    cursor.execute("SELECT uid FROM users")
+    users = cursor.fetchall()
 
-        # Fetch all users from the database
-        cursor.execute("SELECT uid FROM users")
-        users = cursor.fetchall()
+    # Update AR and nickname for each user
+    for user in users:
+        uid = user[0]
+        player = await get_player(uid)
 
-        # Update AR and nickname for each user
-        for user in users:
-            uid = user[0]
-            player = await get_player(uid)
+        if player is not None:
+            new_ar = player.level
+            new_nickname = player.nickname
 
-            if player is not None:
-                new_ar = player.level
-                new_nickname = player.nickname
-
-                # Update user in the database
-                cursor.execute("""
-                    UPDATE users
-                    SET ar = ?, nick = ?
-                    WHERE uid = ?
-                """, (new_ar, new_nickname, uid))
-                conn.commit()
+            # Update user in the database
+            cursor.execute("""
+                UPDATE users
+                SET ar = ?, nick = ?
+                WHERE uid = ?
+            """, (new_ar, new_nickname, uid))
+            conn.commit()
 
 
 async def update_usernames():
-    while True:
-        await asyncio.sleep(48 * 60 * 60)  # Sleep for 48 hours
+    # Fetch all users from the database
+    cursor.execute("SELECT chat_id, username FROM users")
+    users = cursor.fetchall()
 
-        # Fetch all users from the database
-        cursor.execute("SELECT chat_id, username FROM users")
-        users = cursor.fetchall()
+    # Update username for each user
+    for user in users:
+        chat_id, current_username = user
+        user_info = await bot.get_chat(chat_id)
 
-        # Update username for each user
-        for user in users:
-            chat_id, current_username = user
-            user_info = await bot.get_chat(chat_id)
+        if user_info is not None:
+            new_username = user_info.username
+            first_name = user_info.first_name
 
-            if user_info is not None:
-                new_username = user_info.username
-                first_name = user_info.first_name
-
-                # Check if username has been added or changed
-                if new_username is not None and new_username != current_username:
-                    cursor.execute("""
-                        UPDATE users
-                        SET username = ?
-                        WHERE chat_id = ?
-                    """, (new_username, chat_id))
-                # Check if username is not set but first_name has been changed
-                elif new_username is None and first_name != current_username:
-                    cursor.execute("""
-                        UPDATE users
-                        SET username = ?
-                        WHERE chat_id = ?
-                    """, (first_name, chat_id))
-                
-                conn.commit()
+            # Check if username has been added or changed
+            if new_username is not None and new_username != current_username:
+                cursor.execute("""
+                    UPDATE users
+                    SET username = ?
+                    WHERE chat_id = ?
+                """, (new_username, chat_id))
+            # Check if username is not set but first_name has been changed
+            elif new_username is None and first_name != current_username:
+                cursor.execute("""
+                    UPDATE users
+                    SET username = ?
+                    WHERE chat_id = ?
+                """, (first_name, chat_id))
+            
+            conn.commit()
 
 
-
+import time
 async def backup_db():
     while True:
         await asyncio.sleep(1 * 60 * 60)  # Sleep for 48 hours
