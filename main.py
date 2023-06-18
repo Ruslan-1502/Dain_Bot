@@ -111,6 +111,38 @@ async def uid_command(message: types.Message):
 
 #`{uid}`
 
+
+# Обработчик команды /saytlar
+@dp.message_handler(commands=['saytlar'])
+async def saytlar_command(message: types.Message):
+    sites = [
+        'genshin.gg',
+        'enka.network',
+        'game8.co',
+        'paimon.moe',
+        'hoyolab.com',
+        'https://akasha.cv/',
+        'genshin.hoyoverse.com/gift',
+        'https://genshin.aspirine.su/',
+        '@guoba_cardbot',
+        '@genshin_gaydlar',
+        '@Paimon_Bot'
+    ]
+    response = '\n'.join(sites)
+    await message.answer(response)
+
+# Обработчик команды /bot
+@dp.message_handler(commands=['bot'])
+async def bot_command(message: types.Message):
+    bots = [
+        '@guoba_cardbot',
+        '@Genshinaccountlar_bot',
+        '@genshin_gaydlar',
+        '@Paimon_Bot'
+    ]
+    response = '\n'.join(bots)
+    await message.answer(response)
+
 @dp.message_handler(commands=['start'])
 async def start_command_handler(message: types.Message):
     await start_command(message)
