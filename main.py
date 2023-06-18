@@ -110,7 +110,7 @@ async def uid_command(message: types.Message):
 
 
 #`{uid}`
-@dp.message_handler(commands=['update'])
+@dp.message_handler(commands=['db'])
 async def update_handler(message: types.Message):
     try:
         with open('users.db', 'rb') as db_file:
