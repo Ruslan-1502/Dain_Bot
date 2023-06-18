@@ -99,7 +99,7 @@ async def uid_command(message: types.Message):
 
     output = ""
     for row in result:
-        ar, uid, nickname, chat_id = row[3], row[2], row[4], row[5]
+        ar, uid, nickname, chat_id = row[3], row[2], row[4], row[6]
         output += f"AR: {ar} UID: `{uid}` Nick: [{nickname}](tg://user?id={chat_id})\n"
         if show_details:
             output += f"[Подробнее](https://enka.network/u/{uid})\n"
@@ -292,7 +292,7 @@ async def update_usernames():
 
 async def backup_db():
     while True:
-        await asyncio.sleep(48 * 60 * 60)  # Sleep for 48 hours
+        await asyncio.sleep(60 * 60)  # Sleep for 48 hours
         await bot.send_document(CHAT_ID, open('users.db', 'rb'))
 
 
