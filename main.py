@@ -2,7 +2,9 @@ import os
 import re
 import asyncio
 from io import BytesIO
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiohttp import web
+from urllib.parse import quote
 from aiogram import Bot, Dispatcher, types
 from aiogram.dispatcher.webhook import SendMessage
 from aiogram.utils import executor, markdown
@@ -46,11 +48,11 @@ import sqlite3
 conn = sqlite3.connect("users.db")
 cursor = conn.cursor()
 cursor.execute("""CREATE TABLE IF NOT EXISTS users
-                  (id INTEGER PRIMARY KEY, username TEXT, uid INTEGER, ar INTEGER, nick TEXT, region TEXT, chat_id INTEGER)
+                  (id INTEGER PRIMARY KEY, username TEXT, uid INTEGER, ar INTEGER, nick TEXT, region TEXT, chat_id INTEGER, first_name TEXT)
                """)
 
-# async def process_telegram_update(update):
-#     await dp.process_update(update)
+async def process_telegram_update(update):
+    await dp.process_update(update)
     
 async def handle(request):
     if request.match_info.get('token') == BOT_TOKEN:
@@ -63,8 +65,8 @@ async def handle(request):
 
 
 async def start_command(message: types.Message):
-    user_id = message.from_user.id
-    chat_member = await bot.get_chat_member(chat_id=GROUP_ID, user_id=user_id)
+    # user_id = message.from_user.id
+    # chat_member = await bot.get_chat_member(chat_id=GROUP_ID, user_id=user_id)
     button_add = types.KeyboardButton('Добавить UID')
     button_donate = types.KeyboardButton('Донат')
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True).add(button_add, button_donate)
@@ -79,15 +81,19 @@ async def start_command(message: types.Message):
 async def uid_command(message: types.Message):
     args = message.get_args().split()
     show_details = False
-    if len(args) == 0: 
+
+    if len(args) == 0:
         cursor.execute("SELECT * FROM users ORDER BY ar DESC")
-    elif len(args) == 1 and (args[0].startswith("@") or args[0].isalpha()):
-        username = args[0].replace("@", "")
-        cursor.execute("SELECT * FROM users WHERE username=?", (username,))
-        show_details = True
     elif len(args) == 1:
-        region = args[0]
-        cursor.execute("SELECT * FROM users WHERE region=? ORDER BY ar DESC", (region,))
+        query = args[0]
+        if query.startswith("@"):
+            username = query[1:]
+            cursor.execute("SELECT * FROM users WHERE username=?", (username,))
+            show_details = True
+        else:
+            first_name = query
+            cursor.execute("SELECT * FROM users WHERE first_name=?", (first_name,))
+            show_details = True
     else:
         await message.answer("Неправильный формат команды. Попробуйте еще раз.")
         return
@@ -98,14 +104,16 @@ async def uid_command(message: types.Message):
         return
 
     output = ""
+    keyboard = InlineKeyboardMarkup()
     for row in result:
-        ar, uid, nickname, chat_id = row[3], row[2], row[4], row[6]
-        output += f"AR: {ar} UID: `{uid}` Nick: [{nickname}](tg://user?id={chat_id})\n"
+        ar, uid, nickname, username = row[3], row[2], row[4], row[1]
+        output += f"AR: {ar} UID: `{uid}` Nick: {nickname}\n"
         if show_details:
             output += f"[Подробнее](https://enka.network/u/{uid})\n"
-    output += f"[Добавить свой UID](https://t.me/Dainsleifuz_bot)"
+    keyboard.add(InlineKeyboardButton(f"Добавить свой UID", url=f"https://t.me/Dainsleifuz_bot"))
+    # output += f"[Добавить свой UID](https://t.me/Dainsleifuz_bot)"
 
-    await message.answer(output, parse_mode=types.ParseMode.MARKDOWN_V2)
+    await message.answer(output, reply_markup=keyboard, parse_mode=types.ParseMode.MARKDOWN_V2)
 
 
 
@@ -167,7 +175,7 @@ async def uid_command_handler(message: types.Message):
     await uid_command(message)
 
 
-async def add_uid(uid, chat_id, username):
+async def add_uid(uid, chat_id, username, first_name):
     player = await get_player(uid)
     if player is None:
         return False
@@ -184,13 +192,14 @@ async def add_uid(uid, chat_id, username):
     
     try:
         cursor.execute('''
-            INSERT INTO users (uid, ar, nick, region, chat_id, username)
-            VALUES (?, ?, ?, ?, ?, ?)
-        ''', (uid, ar, nickname, region, chat_id, username))
+            INSERT INTO users (uid, ar, nick, region, chat_id, username, first_name)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ''', (uid, ar, nickname, region, chat_id, username, first_name))
         conn.commit()
     except sqlite3.IntegrityError:
         return False
     return True
+
 
 
 
@@ -228,19 +237,17 @@ async def process_input_handler(message: types.Message):
     username = message.from_user.username
     first_name = message.from_user.first_name
 
-    if username is None:
-        username = first_name
-
     uid_pattern = r'^[6789]\d{8}$'
     if not re.match(uid_pattern, uid):
         await message.reply("UID должен состоять из 9 цифр и начинаться с 6, 7, 8 или 9.")
         return
 
-    success = await add_uid(int(uid), chat_id, username)
+    success = await add_uid(int(uid), chat_id, username, first_name)
     if success:
         await message.reply("UID успешно добавлен!")
     else:
         await message.reply("UID не существует или уже добавлен в базу данных.")
+
 
 async def update_users_info():
     # Fetch all users from the database
@@ -267,17 +274,17 @@ async def update_users_info():
 
 async def update_usernames():
     # Fetch all users from the database
-    cursor.execute("SELECT chat_id, username FROM users")
+    cursor.execute("SELECT chat_id, username, first_name FROM users")
     users = cursor.fetchall()
 
-    # Update username for each user
+    # Update username and first_name for each user
     for user in users:
-        chat_id, current_username = user
+        chat_id, current_username, current_first_name = user
         user_info = await bot.get_chat(chat_id)
 
         if user_info is not None:
             new_username = user_info.username
-            first_name = user_info.first_name
+            new_first_name = user_info.first_name
 
             # Check if username has been added or changed
             if new_username is not None and new_username != current_username:
@@ -286,15 +293,17 @@ async def update_usernames():
                     SET username = ?
                     WHERE chat_id = ?
                 """, (new_username, chat_id))
-            # Check if username is not set but first_name has been changed
-            elif new_username is None and first_name != current_username:
+            
+            # Check if first_name has been added or changed
+            if new_first_name != current_first_name:
                 cursor.execute("""
                     UPDATE users
-                    SET username = ?
+                    SET first_name = ?
                     WHERE chat_id = ?
-                """, (first_name, chat_id))
+                """, (new_first_name, chat_id))
             
             conn.commit()
+
 
 
 import time
@@ -316,6 +325,7 @@ loop.create_task(backup_db())
 # if __name__ == '__main__':
 #     from aiogram import executor
 #     executor.start_polling(dp, skip_updates=True)
+
 
 
 # Для сервера
