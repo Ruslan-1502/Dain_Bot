@@ -110,7 +110,7 @@ async def uid_command(message: types.Message):
         output += f"AR: {ar} UID: `{uid}` Nick: {nickname}\n"
         if show_details:
             output += f"[Подробнее](https://enka.network/u/{uid})\n"
-    keyboard.add(InlineKeyboardButton(f"Добавить свой UID", url=f"https://t.me/Dainsleifuz_bot"))
+    keyboard.add(InlineKeyboardButton(f"Добавить свой UID", url=f"https://t.me/akashauz_bot"))
     # output += f"[Добавить свой UID](https://t.me/Dainsleifuz_bot)"
 
     await message.answer(output, reply_markup=keyboard, parse_mode=types.ParseMode.MARKDOWN_V2)
