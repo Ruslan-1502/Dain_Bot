@@ -4,6 +4,8 @@ import asyncio
 from io import BytesIO
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiohttp import web
+from aiogram.types import ChatType
+from aiogram.utils.exceptions import Unauthorized
 from urllib.parse import quote
 from aiogram import Bot, Dispatcher, types
 from aiogram.dispatcher.webhook import SendMessage
@@ -77,8 +79,20 @@ async def start_command(message: types.Message):
     "/uid <region> - Показать список игроков для указанного региона (america, europe, asia, sar)\n")
     await message.reply(start_text, reply_markup=keyboard)
 
-
 async def uid_command(message: types.Message):
+    # Check if the message is in a group chat
+    if message.chat.type in ["group", "supergroup"]:
+        # Получаем информацию о членстве бота в группе
+        member = await bot.get_chat_member(chat_id=message.chat.id, user_id=bot.id)
+        # Если бот не является администратором или не может удалять сообщения
+        if member.status != "administrator" or not member.can_delete_messages:
+            # Бот просит пользователя предоставить ему права администратора
+            await message.answer("Пожалуйста, дайте мне права администратора для удаления сообщений.")
+            return
+
+        # Если бот является администратором и может удалять сообщения, удаляем сообщение пользователя
+        await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+
     args = message.get_args().split()
     show_details = False
 
@@ -104,17 +118,22 @@ async def uid_command(message: types.Message):
         return
 
     output = ""
-    keyboard = InlineKeyboardMarkup()
-    for row in result:
-        ar, uid, nickname, username = row[3], row[2], row[4], row[1]
-        output += f"AR: {ar} UID: `{uid}` Nick: {nickname}\n"
-        if show_details:
-            output += f"[Подробнее](https://enka.network/u/{uid})\n"
-    keyboard.add(InlineKeyboardButton(f"Добавить свой UID", url=f"https://t.me/akashauz_bot"))
-    # output += f"[Добавить свой UID](https://t.me/Dainsleifuz_bot)"
-
-    await message.answer(output, reply_markup=keyboard, parse_mode=types.ParseMode.MARKDOWN_V2)
-
+    if message.chat.type in ["group", "supergroup"]:
+        keyboard = InlineKeyboardMarkup()
+        for row in result:
+            ar, uid, nickname, username = row[3], row[2], row[4], row[1]
+            output += f"AR: {ar} UID: `{uid}` Nick: {nickname}\n"
+            if show_details:
+                output += f"[Подробнее](https://enka.network/u/{uid})\n"
+        keyboard.add(InlineKeyboardButton(f"Добавить свой UID", url=f"https://t.me/Dainsleifuz_bot"))
+        await message.answer(output, reply_markup=keyboard, parse_mode=types.ParseMode.MARKDOWN_V2)
+    else:
+        for row in result:
+            ar, uid, nickname, chat_id = row[3], row[2], row[4], row[6]
+            output += f"AR: {ar} UID: `{uid}` Nick: [{nickname}](tg://user?id={chat_id})\n"
+            if show_details:
+                output += f"[Подробнее](https://enka.network/u/{uid})\n"
+        await message.answer(output, parse_mode=types.ParseMode.MARKDOWN_V2)
 
 
 #`{uid}`
@@ -138,6 +157,17 @@ async def update_handler(message: types.Message):
 # Обработчик команды /saytlar
 @dp.message_handler(commands=['saytlar'])
 async def saytlar_command(message: types.Message):
+    if message.chat.type not in [ChatType.PRIVATE]:
+        # Получаем информацию о членстве бота в группе
+        member = await bot.get_chat_member(chat_id=message.chat.id, user_id=bot.id)
+        # Если бот не является администратором или не может удалять сообщения
+        if member.status != "administrator" or not member.can_delete_messages:
+            # Бот просит пользователя предоставить ему права администратора
+            await message.answer("Пожалуйста, дайте мне права администратора для удаления сообщений.")
+            return
+
+        # Если бот является администратором и может удалять сообщения, удаляем сообщение пользователя
+        await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
     sites = [
         'genshin.gg',
         'enka.network',
@@ -157,6 +187,20 @@ async def saytlar_command(message: types.Message):
 # Обработчик команды /bot
 @dp.message_handler(commands=['bot'])
 async def bot_command(message: types.Message):
+    # Проверяем, является ли чат групповым
+    if message.chat.type not in [ChatType.PRIVATE]:
+        # Получаем информацию о членстве бота в группе
+        member = await bot.get_chat_member(chat_id=message.chat.id, user_id=bot.id)
+        # Если бот не является администратором или не может удалять сообщения
+        if member.status != "administrator" or not member.can_delete_messages:
+            # Бот просит пользователя предоставить ему права администратора
+            await message.answer("Пожалуйста, дайте мне права администратора для удаления сообщений.")
+            return
+
+        # Если бот является администратором и может удалять сообщения, удаляем сообщение пользователя
+        await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+
+    # Здесь ответ бота для всех типов чатов
     bots = [
         '@guoba_cardbot',
         '@Genshinaccountlar_bot',
@@ -165,6 +209,8 @@ async def bot_command(message: types.Message):
     ]
     response = '\n'.join(bots)
     await message.answer(response)
+
+
 
 @dp.message_handler(commands=['start'])
 async def start_command_handler(message: types.Message):
@@ -325,6 +371,7 @@ loop.create_task(backup_db())
 # if __name__ == '__main__':
 #     from aiogram import executor
 #     executor.start_polling(dp, skip_updates=True)
+
 
 
 
