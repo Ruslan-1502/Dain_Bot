@@ -36,7 +36,7 @@ def get_region(uid):
     if first_digit == 6:
         return "america"
     elif first_digit == 7:
-        return "europe"
+        return "euro"
     elif first_digit == 8:
         return "asia"
     elif first_digit == 9:
@@ -76,7 +76,7 @@ async def start_command(message: types.Message):
     "Добро пожаловать! Воспользуйтесь кнопками ниже или командами:\n\n"
     "/uid - Показать список всех игроков\n"
     "/uid @nickname - Показать информацию об игроке с данным ником\n"
-    "/uid <region> - Показать список игроков для указанного региона (america, europe, asia, sar)\n")
+    "/uid <region> - Показать список игроков для указанного региона (america, euro, asia, sar)\n")
     await message.reply(start_text, reply_markup=keyboard)
 
 async def uid_command(message: types.Message):
@@ -104,6 +104,9 @@ async def uid_command(message: types.Message):
             username = query[1:]
             cursor.execute("SELECT * FROM users WHERE username=?", (username,))
             show_details = True
+        elif query in ["asia", "euro", "america", "sar"]: # Or whatever your valid regions are
+            region = query
+            cursor.execute("SELECT * FROM users WHERE region=? ORDER BY ar DESC", (region,))
         else:
             first_name = query
             cursor.execute("SELECT * FROM users WHERE first_name=?", (first_name,))
@@ -122,7 +125,7 @@ async def uid_command(message: types.Message):
         keyboard = InlineKeyboardMarkup()
         for row in result:
             ar, uid, nickname, username = row[3], row[2], row[4], row[1]
-            output += f"AR: {ar} UID: `{uid}` Nick: {nickname}\n"
+            output += f"AR: {ar} UID: {uid} Nick: {nickname}\n"
             if show_details:
                 output += f"[Подробнее](https://enka.network/u/{uid})\n"
         keyboard.add(InlineKeyboardButton(f"Добавить свой UID", url=f"https://t.me/Dainsleifuz_bot"))
@@ -130,10 +133,10 @@ async def uid_command(message: types.Message):
     else:
         for row in result:
             ar, uid, nickname, chat_id = row[3], row[2], row[4], row[6]
-            output += f"AR: {ar} UID: `{uid}` Nick: [{nickname}](tg://user?id={chat_id})\n"
+            output += f"AR: {ar} UID: {uid} Nick: [{nickname}](tg://user?id={chat_id})\n"
             if show_details:
                 output += f"[Подробнее](https://enka.network/u/{uid})\n"
-        await message.answer(output, parse_mode=types.ParseMode.MARKDOWN_V2)
+        await message.answer(output, parse_mode=types.ParseMode.MARKDOWN)
 
 
 #`{uid}`
