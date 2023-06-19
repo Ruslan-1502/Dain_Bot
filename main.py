@@ -125,7 +125,7 @@ async def uid_command(message: types.Message):
         keyboard = InlineKeyboardMarkup()
         for row in result:
             ar, uid, nickname, username = row[3], row[2], row[4], row[1]
-            output += f"AR: {ar} UID: {uid} Nick: {nickname}\n"
+            output += f"AR: {ar} UID: `{uid}` Nick: {nickname}\n"
             if show_details:
                 output += f"[Подробнее](https://enka.network/u/{uid})\n"
         keyboard.add(InlineKeyboardButton(f"Добавить свой UID", url=f"https://t.me/Dainsleifuz_bot"))
@@ -133,7 +133,7 @@ async def uid_command(message: types.Message):
     else:
         for row in result:
             ar, uid, nickname, chat_id = row[3], row[2], row[4], row[6]
-            output += f"AR: {ar} UID: {uid} Nick: [{nickname}](tg://user?id={chat_id})\n"
+            output += f"AR: {ar} UID: `{uid}` Nick: [{nickname}](tg://user?id={chat_id})\n"
             if show_details:
                 output += f"[Подробнее](https://enka.network/u/{uid})\n"
         await message.answer(output, parse_mode=types.ParseMode.MARKDOWN)
