@@ -127,16 +127,32 @@ async def uid_command(message: types.Message):
             ar, uid, nickname, username = row[3], row[2], row[4], row[1]
             output += f"AR: {ar} UID: `{uid}` Nick: {nickname}\n"
             if show_details:
-                output += f"[Подробнее](https://enka.network/u/{uid})\n"
+                if show_details:
+                    output += f"[Подробнее](https://enka.network/u/{uid})\n"
+                    result = await encprofile(uid)
+                    if 'img' in result:
+                        photo = result['img']
+                        image_output = BytesIO()
+                        photo.save(image_output, format='PNG')
+                        image_output.seek(0)
+                        await bot.send_photo(chat_id=message.chat.id, photo=image_output)
         keyboard.add(InlineKeyboardButton(f"Добавить свой UID", url=f"https://t.me/Dainsleifuz_bot"))
         await message.answer(output, reply_markup=keyboard, parse_mode=types.ParseMode.MARKDOWN_V2)
     else:
+        photo = None  # Initialize the variable with a default value
         for row in result:
             ar, uid, nickname, chat_id = row[3], row[2], row[4], row[6]
             output += f"AR: {ar} UID: `{uid}` Nick: [{nickname}](tg://user?id={chat_id})\n"
             if show_details:
                 output += f"[Подробнее](https://enka.network/u/{uid})\n"
-        await message.answer(output, parse_mode=types.ParseMode.MARKDOWN)
+                result = await encprofile(uid)
+                if 'img' in result:
+                    photo = result['img']
+                    image_output = BytesIO()
+                    photo.save(image_output, format='PNG')
+                    image_output.seek(0)
+                    await bot.send_photo(chat_id=message.chat.id, photo=image_output)
+        await message.answer(output, parse_mode=types.ParseMode.MARKDOWN_V2)
 
 
 #`{uid}`
