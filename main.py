@@ -137,7 +137,7 @@ async def uid_command(message: types.Message):
                         photo.save(image_output, format='PNG')
                         image_output.seek(0)
                         await bot.send_photo(chat_id=message.chat.id, photo=image_output)
-        keyboard.add(InlineKeyboardButton(f"Добавить свой UID", url=f"https://t.me/Dainsleifuz_bot"))
+        keyboard.add(InlineKeyboardButton(f"Добавить свой UID", url=f"https://t.me/akashauz_bot"))
         await message.answer(output, reply_markup=keyboard, parse_mode=types.ParseMode.MARKDOWN_V2)
     else:
         photo = None  # Initialize the variable with a default value
