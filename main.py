@@ -33,7 +33,7 @@ async def on_shutdown(dispatcher):
 
 
 
-sync def check_membership(bot, message: types.Message, GROUP_ID):
+async def check_membership(bot, message: types.Message, GROUP_ID):
     # Проверка, что пользователь является участником хотя бы одной из групп
     for group_id in GROUP_ID:
         try:
