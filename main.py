@@ -36,16 +36,16 @@ async def on_shutdown(dispatcher):
 async def check_membership(bot, message: types.Message, GROUP_ID):
     # Проверка, что бот работает только в определенных группах
     if message.chat.id not in GROUP_ID:
-        await message.reply("Я работаю только в определенной группе")
+        await message.reply("Я работаю только в группе https://t.me/genshinimpact_uzb")
         return False
     try:
         # Проверка, что пользователь является участником группы
         member = await bot.get_chat_member(message.chat.id, message.from_user.id)
         if member.status in ['left', 'kicked']:
-            await message.reply("Вы не являетесь участником этой группы.")
+            await message.reply("Вы не являетесь участником этой группы https://t.me/genshinimpact_uzb.")
             return False
     except exceptions.BadRequest:
-        await message.reply("Вы не являетесь участником этой группы.")
+        await message.reply("Вы не являетесь участником этой группы https://t.me/genshinimpact_uzb.")
         return False
     return True
 
