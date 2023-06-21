@@ -20,7 +20,7 @@ TOKEN = BOT_TOKEN
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
 CHAT_ID = 254336259
-GROUP_ID = -1001888345564
+GROUP_ID = [-1001888345564, -1001883016437, -1001918713467]
 
 async def on_startup(dispatcher):
     await dp.bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
