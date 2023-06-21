@@ -41,7 +41,7 @@ async def check_membership(bot, message: types.Message, GROUP_ID):
             await message.reply("Вы не являетесь участником этой группы.")
             return False
     except exceptions.BadRequest:
-        await message.reply("Вы не являетесь участником этой группы.")
+        await message.reply("Вы не являетесь участником этой группы https://t.me/genshinimpact_uzb.")
         return False
     return True
 
