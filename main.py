@@ -34,6 +34,11 @@ async def on_shutdown(dispatcher):
 
 
 async def check_membership(bot, message: types.Message, GROUP_ID):
+    # Если сообщение пришло из группы, которая не в списке разрешенных, отвечаем и выходим
+    if message.chat.type == 'group' and message.chat.id not in GROUP_ID:
+        await message.reply("Я работаю только в определенной группе")
+        return False
+
     # Проверка, что пользователь является участником хотя бы одной из групп
     for group_id in GROUP_ID:
         try:
@@ -42,6 +47,7 @@ async def check_membership(bot, message: types.Message, GROUP_ID):
                 return True
         except exceptions.BadRequest:
             continue  # Если пользователь не является участником текущей группы, проверяем следующую
+
     await message.reply("Вы не являетесь участником нужной группы.")
     return False
 
