@@ -98,7 +98,7 @@ async def uid_command(message: types.Message):
     show_details = False
 
     if len(args) == 0:
-        cursor.execute("SELECT * FROM users ORDER BY ar DESC")
+        cursor.execute("SELECT * FROM users ORDER BY ar DESC, uid ASC")
     elif len(args) == 1:
         query = args[0]
         if query.startswith("@"):
@@ -107,7 +107,7 @@ async def uid_command(message: types.Message):
             show_details = True
         elif query in ["asia", "euro", "america", "sar"]: # Or whatever your valid regions are
             region = query
-            cursor.execute("SELECT * FROM users WHERE region=? ORDER BY ar DESC", (region,))
+            cursor.execute("SELECT * FROM users WHERE region=? ORDER BY ar DESC, uid ASC", (region,))
         else:
             first_name = query
             cursor.execute("SELECT * FROM users WHERE first_name=?", (first_name,))
