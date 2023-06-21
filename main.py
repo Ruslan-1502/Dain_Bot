@@ -36,7 +36,7 @@ async def on_shutdown(dispatcher):
 async def check_membership(bot, message: types.Message, GROUP_ID):
     # Если сообщение пришло не из личных сообщений и чат не в списке разрешенных, отвечаем и выходим
     if message.chat.type != 'private' and message.chat.id not in GROUP_ID:
-        await message.reply("Я работаю только в определенной группе")
+        await message.reply("Я работаю только в группе https://t.me/genshinimpact_uzb")
         return False
 
     # Проверка, что пользователь является участником хотя бы одной из групп
@@ -48,7 +48,7 @@ async def check_membership(bot, message: types.Message, GROUP_ID):
         except exceptions.BadRequest:
             continue  # Если пользователь не является участником текущей группы, проверяем следующую
 
-    await message.reply("Вы не являетесь участником нужной группы.")
+    await message.reply("Вы не являетесь участником группы https://t.me/genshinimpact_uzb.")
     return False
 
 
