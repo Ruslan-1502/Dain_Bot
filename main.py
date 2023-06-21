@@ -362,19 +362,10 @@ async def update_users_info():
     cursor.execute("SELECT uid FROM users")
     users = cursor.fetchall()
 
-    # Create a list to hold all the tasks
-    tasks = []
-
     # Update AR and nickname for each user
     for user in users:
         uid = user[0]
-        # Create a new task for each user and add it to the list
-        task = asyncio.create_task(get_player(uid))
-        tasks.append(task)
-
-    # Now await all the tasks
-    for task in tasks:
-        player = await task
+        player = await get_player(uid)
 
         if player is not None:
             new_ar = player.level
