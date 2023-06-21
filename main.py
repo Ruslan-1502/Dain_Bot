@@ -34,12 +34,13 @@ async def on_shutdown(dispatcher):
 
 
 async def check_membership(bot, message: types.Message, GROUP_ID):
-    # Здесь должен быть ID вашей группы, если он не передан в функцию
-    if message.chat.id != GROUP_ID:
+    # Проверка, что бот работает только в определенных группах
+    if message.chat.id not in GROUP_ID:
         await message.reply("Я работаю только в определенной группе")
         return False
     try:
-        member = await bot.get_chat_member(GROUP_ID, message.from_user.id)
+        # Проверка, что пользователь является участником группы
+        member = await bot.get_chat_member(message.chat.id, message.from_user.id)
         if member.status in ['left', 'kicked']:
             await message.reply("Вы не являетесь участником этой группы.")
             return False
