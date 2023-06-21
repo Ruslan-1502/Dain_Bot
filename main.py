@@ -14,6 +14,7 @@ from aiogram.types import ParseMode
 from config import BOT_TOKEN, WEBHOOK_URL, WEBAPP_HOST, WEBAPP_PORT,WEBHOOK_PATH
 from GetInfo import get_player
 from enkaprofile import encprofile
+from characters import characters
 
 TOKEN = BOT_TOKEN
 bot = Bot(token=TOKEN)
@@ -167,15 +168,6 @@ async def update_handler(message: types.Message):
 
 
 CHANNEL_ID = -1001800045281  # замените на ваше число
-
-# Настройте этот словарь согласно вашим нуждам.
-# Замените 'MESSAGE_ID' на соответствующий идентификатор сообщения.
-characters = {
-    'kazuha': 83,  # замените на ваше число
-    'itto': 130,  # замените на ваше число
-    # Добавьте другие персонажи по мере необходимости
-}
-
 @dp.message_handler(commands=['gayd'])
 async def send_character_guide(message: types.Message):
     character = message.text.split()[1].lower()
