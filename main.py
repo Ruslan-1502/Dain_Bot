@@ -20,7 +20,7 @@ TOKEN = BOT_TOKEN
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
 CHAT_ID = 254336259
-GROUP_ID = -1001683783876
+GROUP_ID = -1001888345564
 
 async def on_startup(dispatcher):
     await dp.bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
@@ -30,6 +30,21 @@ async def on_startup_handler():
     
 async def on_shutdown(dispatcher):
     await dp.bot.delete_webhook()
+
+
+
+async def check_membership(bot, message: types.Message, GROUP_ID):
+    # Здесь должен быть ID вашей группы, если он не передан в функцию
+    try:
+        member = await bot.get_chat_member(GROUP_ID, message.from_user.id)
+        if member.status in ['left', 'kicked']:
+            await message.reply("Вы не являетесь участником этой группы.")
+            return False
+    except exceptions.BadRequest:
+        await message.reply("Вы не являетесь участником этой группы.")
+        return False
+    return True
+
 
 
 
@@ -170,6 +185,8 @@ async def update_handler(message: types.Message):
 CHANNEL_ID = -1001800045281  # замените на ваше число
 @dp.message_handler(commands=['gayd'])
 async def send_character_guide(message: types.Message):
+    if not await check_membership(bot, message, GROUP_ID):
+        return
     character = message.text.split()[1].lower().replace(" ", "")
     message_id = characters.get(character)
     if message_id is not None:
@@ -249,10 +266,14 @@ async def bot_command(message: types.Message):
 
 @dp.message_handler(commands=['start'])
 async def start_command_handler(message: types.Message):
+    if not await check_membership(bot, message, GROUP_ID):
+        return
     await start_command(message)
 
 @dp.message_handler(commands=["uid"])
 async def uid_command_handler(message: types.Message):
+    if not await check_membership(bot, message, GROUP_ID):
+        return
     await uid_command(message)
 
 
@@ -308,6 +329,8 @@ async def delete_handler(message: types.Message):
 
 @dp.message_handler(lambda message: message.text == 'Добавить UID')
 async def process_add_uid_command(message: types.Message):
+    if not await check_membership(bot, message, GROUP_ID):
+        return
     # Замените этот блок кода на запрос ввода UID, AR и ника от пользователя
     await message.reply("Пожалуйста, введите свой UID:")
 
