@@ -13,6 +13,7 @@ from aiogram.utils import executor, markdown
 from aiogram.types import ParseMode
 from config import BOT_TOKEN, WEBHOOK_URL, WEBAPP_HOST, WEBAPP_PORT,WEBHOOK_PATH
 from GetInfo import get_player
+from enkaprofile import encprofile
 
 TOKEN = BOT_TOKEN
 bot = Bot(token=TOKEN)
