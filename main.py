@@ -38,7 +38,7 @@ async def check_membership(bot, message: types.Message, GROUP_ID):
     if message.chat.id not in GROUP_ID:
         await message.reply("Я работаю только в группе https://t.me/genshinimpact_uzb")
         return False
-     for group_id in GROUP_ID:
+    for group_id in GROUP_ID:
         try:
             member = await bot.get_chat_member(group_id, message.from_user.id)
             if member.status not in ['left', 'kicked']:
@@ -47,7 +47,6 @@ async def check_membership(bot, message: types.Message, GROUP_ID):
             pass
     await message.reply("Вы не являетесь участником нужной группы.")
     return False
-
 
 
 
