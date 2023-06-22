@@ -112,7 +112,10 @@ async def uid_command(message: types.Message):
             return
 
         # Если бот является администратором и может удалять сообщения, удаляем сообщение пользователя
-        await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+        try:
+            await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+        except aiogram.utils.exceptions.MessageToDeleteNotFound:
+            await message.answer("Сообщение, которое вы пытаетесь удалить, уже было удалено или не найдено.")
 
     args = message.get_args().split()
     show_details = False
