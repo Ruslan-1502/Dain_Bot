@@ -152,7 +152,7 @@ async def uid_command(message: types.Message):
         for row in result:
             ar, uid, nickname, username = row[3], row[2], row[4], row[1]
             # Here, escape only the parts that are not links.
-            output += html.escape(f"AR: {ar} UID: {uid} Nick: {nickname}\n")
+            output += html.escape(f"AR: {ar} UID: `{uid}` Nick: {nickname}\n")
             if show_details:
                 output += f"<a href='https://enka.network/u/{uid}'>Подробнее</a>\n"
                 result = await encprofile(uid)
@@ -169,7 +169,7 @@ async def uid_command(message: types.Message):
         for row in result:
             ar, uid, nickname, chat_id = row[3], row[2], row[4], row[6]
             # Here, escape only the parts that are not links.
-            output += html.escape(f"AR: {ar} UID: {uid} Nick: ") + f"<a href='tg://user?id={chat_id}'>{nickname}</a>\n"
+            output += html.escape(f"AR: {ar} UID: `{uid}` Nick: ") + f"<a href='tg://user?id={chat_id}'>{nickname}</a>\n"
             if show_details:
                 output += f"<a href='https://enka.network/u/{uid}'>Подробнее</a>\n"
                 result = await encprofile(uid)
