@@ -155,7 +155,7 @@ async def uid_command(message: types.Message):
             if show_details:
                 output += f'<a href="https://enka.network/u/{uid}">Подробнее</a>\n'
                 result = await encprofile(uid)
-                if 'img' in result:
+                if result and 'img' in result:
                     photo = result['img']
                     image_output = BytesIO()
                     photo.save(image_output, format='PNG')
@@ -171,7 +171,7 @@ async def uid_command(message: types.Message):
             if show_details:
                 output += f'<a href="https://enka.network/u/{uid}">Подробнее</a>\n'
                 result = await encprofile(uid)
-                if 'img' in result:
+                if result and 'img' in result:
                     photo = result['img']
                     image_output = BytesIO()
                     photo.save(image_output, format='PNG')
