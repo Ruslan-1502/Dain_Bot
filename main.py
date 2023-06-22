@@ -342,7 +342,8 @@ async def process_add_uid_command(message: types.Message):
     # Замените этот блок кода на запрос ввода UID, AR и ника от пользователя
     await message.reply("Пожалуйста, введите свой UID:")
 
-@dp.message_handler(lambda message: re.match(r'^[6789]\d{8}$', message.text))
+
+@dp.message_handler(lambda message: re.match(r'^[6789]\d{8}$', message.text) and message.chat.type == 'private')
 async def process_input_handler(message: types.Message):
     uid = message.text
     chat_id = message.chat.id
