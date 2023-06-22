@@ -1,4 +1,4 @@
-import os
+iimport os
 import re
 import asyncio
 import html
@@ -345,17 +345,18 @@ async def process_add_uid_command(message: types.Message):
     await message.reply("Пожалуйста, введите свой UID:\n Faqat UID kiriting AR va Nick керакмас:")
 
 
-@dp.message_handler(lambda message: re.match(r'^[6789]\d{8}$', message.text) and message.chat.type == 'private')
+@dp.message_handler(lambda message: message.chat.type == 'private')
 async def process_input_handler(message: types.Message):
+    uid_pattern = r'^[6789]\d{8}$'
+
+    if not re.match(uid_pattern, message.text):
+        await message.reply("Неправильный формат UID! UID должен состоять из 9 цифр и начинаться с 6, 7, 8 или 9.")
+        return
+
     uid = message.text
     chat_id = message.chat.id
     username = message.from_user.username
     first_name = message.from_user.first_name
-
-    uid_pattern = r'^[6789]\d{8}$'
-    if not re.match(uid_pattern, uid):
-        await message.reply("UID должен состоять из 9 цифр и начинаться с 6, 7, 8 или 9.")
-        return
 
     success = await add_uid(int(uid), chat_id, username, first_name)
     if success:
