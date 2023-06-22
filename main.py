@@ -342,7 +342,7 @@ async def process_add_uid_command(message: types.Message):
     if not await check_membership(bot, message, GROUP_ID):
         return
     # Замените этот блок кода на запрос ввода UID, AR и ника от пользователя
-    await message.reply("Пожалуйста, введите свой UID:")
+    await message.reply("Пожалуйста, введите свой UID:\n Faqat UID kiriting AR va Nick керакмас:")
 
 
 @dp.message_handler(lambda message: re.match(r'^[6789]\d{8}$', message.text) and message.chat.type == 'private')
