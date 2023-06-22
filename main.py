@@ -416,30 +416,12 @@ async def update_usernames():
             conn.commit()
 
 
-
-import time
-async def backup_db():
-    while True:
-        await asyncio.sleep(1 * 60 * 60)  # Sleep for 48 hours
-        await bot.send_document(CHAT_ID, open('users.db', 'rb'))
-
-
-
-
-# Создание цикла событий
-loop = asyncio.get_event_loop_policy().new_event_loop()
-asyncio.set_event_loop(loop)
-loop.create_task(update_users_info())
-loop.create_task(backup_db())
-
 # Для Ноута
-# if __name__ == '__main__':
-#     from aiogram import executor
-#     executor.start_polling(dp, skip_updates=True)
-
-
+if name == 'main':
+    from aiogram import executor
+    executor.start_polling(dp, skip_updates=True)
 
 
 # Для сервера
-if __name__ == '__main__':
+if name == 'main':
     executor.start_webhook(dispatcher=dp, webhook_path=WEBHOOK_PATH, on_startup=on_startup, on_shutdown=on_shutdown, host=WEBAPP_HOST, port=WEBAPP_PORT)
