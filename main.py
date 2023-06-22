@@ -238,8 +238,7 @@ async def saytlar_command(message: types.Message):
         'https://genshin.aspirine.su/',
         '@guoba_cardbot',
         '@genshin_gaydlar',
-        '@Paimon_Bot'if name == 'main':
-    executor.start_webhook(dispatcher=dp, webhook_path=WEBHOOK_PATH, on_startup=on_startup, on_shutdown=on_shutdown, host=WEBAPP_HOST, port=WEBAPP_PORT
+        '@Paimon_Bot'
     ]
     response = '\n'.join(sites)
     await message.answer(response)
