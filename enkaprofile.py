@@ -1,4 +1,4 @@
-from enkacard import encbanner
+from enkacard import encbanner,enkanetwork
 import asyncio
 
 async def encprofile(uid):
@@ -7,6 +7,8 @@ async def encprofile(uid):
         ENCpy = await encard.enc(uids=uid)
         try:
             profile = await encard.profile(enc=ENCpy, image=True)
-        except AttributeError:
-            print("Карточка игрока не найдена")  # Вместо print может быть любая другая обработка
+        except (AttributeError, enkanetwork.assets.CharacterNotFoundError) as e:
+            print(f"Error occurred for character with id {uid}: {e}")
+            # Handle the error accordingly
     return profile
+
