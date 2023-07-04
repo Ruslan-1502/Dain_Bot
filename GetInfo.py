@@ -8,7 +8,7 @@ client = EnkaNetworkAPI()
 async def get_player(uid):
     try:
         async with client:
-            data = await client.fetch_user(uid)
+            data = await client.fetch_user(uid, timeout=10)
             return data.player
     except asyncio.TimeoutError:
         print("Timeout error occurred")
@@ -17,9 +17,8 @@ async def get_player(uid):
         print("Value error occurred")
         return None
     except EnkaPlayerNotFound:
-        print(f"Character not found with id: {uid}")
+        print("Player not found")
         return None
     except ClientOSError as e:
         print(f"ClientOSError occurred: {e}")
         return None
-
