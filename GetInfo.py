@@ -17,8 +17,9 @@ async def get_player(uid):
         print("Value error occurred")
         return None
     except EnkaPlayerNotFound:
-        print("Player not found")
+        print(f"Character not found with id: {uid}")
         return None
     except ClientOSError as e:
         print(f"ClientOSError occurred: {e}")
         return None
+
