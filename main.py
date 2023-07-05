@@ -384,6 +384,8 @@ async def update_users_info(users):
             new_ar = player.level
             new_nickname = player.nickname
 
+            await asyncio.sleep(1)  # Добавляем задержку в 1 секунду перед обновлением пользователя
+
             # Update user in the database
             cursor.execute("""
                 UPDATE users
@@ -391,6 +393,7 @@ async def update_users_info(users):
                 WHERE uid = ?
             """, (new_ar, new_nickname, uid))
             conn.commit()
+
 
 async def count_users():
     cursor.execute("SELECT COUNT(*) FROM users")
