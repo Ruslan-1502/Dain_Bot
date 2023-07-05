@@ -186,12 +186,26 @@ async def update_handler(message: types.Message):
     if message.from_user.id == CHAT_ID:
         await message.reply("Начинаю обновление пользовательской информации...")
 
-        global users  # Объявляем переменную users как глобальную
+        command_args = message.get_args()
+        if command_args is None:
+            await message.reply("Вы должны указать аргументы команды.")
+            return
 
-        # Fetch all users from the database
-        cursor.execute("SELECT uid FROM users")
-        users = cursor.fetchall()
+        # Разбиваем аргументы команды на части
+        args = command_args.split('-')
+        if len(args) != 2:
+            await message.reply("Неверный формат аргументов команды.")
+            return
 
+        start_index = int(args[0])
+        end_index = int(args[1])
+
+        total_users = await count_users()
+        if start_index > end_index or end_index > total_users:
+            await message.reply("Неверный диапазон пользователей.")
+            return
+
+        users = await get_users(start_index - 1, end_index - start_index + 1)
         await update_users_info(users, message)  # Передаем список пользователей и объект message в функцию
 
         await message.reply("Обновление завершено.")
@@ -384,9 +398,6 @@ async def update_users_info(users, message):
 
     # Update AR and nickname for each user
     for user in users:
-        if updated_users >= total_users:
-            break
-
         uid = user[0]
         player = await get_player(uid)
 
@@ -404,7 +415,7 @@ async def update_users_info(users, message):
 
             updated_users += 1
 
-            if updated_users % batch_size == 0:
+            if updated_users % batch_size == 0 or updated_users == total_users:
                 message_text = f"Обновлено пользователей: {updated_users}/{total_users}"
                 await message.reply(message_text)
 
@@ -412,11 +423,11 @@ async def update_users_info(users, message):
     await message.reply(message_text)
 
 
-
 async def count_users():
     cursor.execute("SELECT COUNT(*) FROM users")
     result = cursor.fetchone()
     return result[0]
+
 
 async def get_users(offset, limit):
     cursor.execute("SELECT uid FROM users LIMIT ?, ?", (offset, limit))
