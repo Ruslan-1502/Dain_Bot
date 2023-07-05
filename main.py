@@ -375,16 +375,26 @@ async def process_input_handler(message: types.Message):
         await message.reply("UID не существует или уже добавлен в базу данных.")
 
 
-async def update_users_info(users):
+async def update_users_info():
+    # Fetch all users from the database
+    cursor.execute("SELECT uid FROM users")
+    users = cursor.fetchall()
+
+    total_users = len(users)
+    batch_size = 10
+    updated_users = 0
+
+    # Update AR and nickname for each user
     for user in users:
+        if updated_users >= total_users:
+            break
+
         uid = user[0]
         player = await get_player(uid)
 
         if player is not None:
             new_ar = player.level
             new_nickname = player.nickname
-
-            await asyncio.sleep(1)  # Добавляем задержку в 1 секунду перед обновлением пользователя
 
             # Update user in the database
             cursor.execute("""
@@ -393,6 +403,16 @@ async def update_users_info(users):
                 WHERE uid = ?
             """, (new_ar, new_nickname, uid))
             conn.commit()
+
+            updated_users += 1
+
+        if updated_users % batch_size == 0:
+            message_text = f"Обновлено пользователей: {updated_users}/{total_users}"
+            await message.reply(message_text)
+
+    message_text = "Обновление пользовательской информации выполнено."
+    await message.reply(message_text)
+
 
 
 async def count_users():
