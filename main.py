@@ -201,7 +201,6 @@ async def update_handler(message: types.Message):
 
 
 
-
 CHANNEL_ID = -1001800045281  # замените на ваше число
 
 @dp.message_handler(commands=['gayd'])
@@ -405,9 +404,9 @@ async def update_users_info(users, message):
 
             updated_users += 1
 
-        if updated_users % batch_size == 0:
-            message_text = f"Обновлено пользователей: {updated_users}/{total_users}"
-            await message.reply(message_text)
+            if updated_users % batch_size == 0:
+                message_text = f"Обновлено пользователей: {updated_users}/{total_users}"
+                await message.reply(message_text)
 
     message_text = "Обновление пользовательской информации выполнено."
     await message.reply(message_text)
