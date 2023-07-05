@@ -192,7 +192,7 @@ async def update_handler(message: types.Message):
         cursor.execute("SELECT uid FROM users")
         users = cursor.fetchall()
 
-        await update_users_info(users, message)  # Передаем список пользователей и объект message в функцию
+        await update_users_info(message)  # Передаем объект message в функцию
 
         await message.reply("Обновление завершено.")
     else:
@@ -377,7 +377,7 @@ async def process_input_handler(message: types.Message):
         await message.reply("UID не существует или уже добавлен в базу данных.")
 
 
-async def update_users_info(users, message):
+async def update_users_info(message):
     total_users = len(users)
     batch_size = 10
     updated_users = 0
@@ -404,9 +404,9 @@ async def update_users_info(users, message):
 
             updated_users += 1
 
-            if updated_users % batch_size == 0:
-                message_text = f"Обновлено пользователей: {updated_users}/{total_users}"
-                await message.reply(message_text)
+        if updated_users % batch_size == 0:
+            message_text = f"Обновлено пользователей: {updated_users}/{total_users}"
+            await message.reply(message_text)
 
     message_text = "Обновление пользовательской информации выполнено."
     await message.reply(message_text)
