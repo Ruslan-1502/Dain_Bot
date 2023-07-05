@@ -183,7 +183,7 @@ async def uid_command(message: types.Message):
 #`{uid}`
 @dp.message_handler(commands=['update'])
 async def update_handler(message: types.Message):
-    if message.from_user.id == ADMIN_ID:
+    if message.from_user.id == CHAT_ID:
         await message.reply("Начинаю обновление пользовательской информации...")
 
         global users  # Объявляем переменную users как глобальную
