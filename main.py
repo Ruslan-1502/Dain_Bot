@@ -183,18 +183,21 @@ async def uid_command(message: types.Message):
 #`{uid}`
 @dp.message_handler(commands=['update'])
 async def update_handler(message: types.Message):
-    total_users = await count_users()  # Получаем общее количество пользователей
-    batch_size = 10  # Размер пакета
+    if message.from_user.id == ADMIN_ID:
+        await message.reply("Начинаю обновление пользовательской информации...")
 
-    for offset in range(0, total_users, batch_size):
-        users = await get_users(offset, batch_size)  # Получаем пользователей для текущего пакета
-        await update_users_info(users)  # Обновляем информацию для пользователей
+        global users  # Объявляем переменную users как глобальную
 
-        updated_count = min(batch_size, total_users - offset)  # Количество обновленных пользователей в текущем пакете
-        message_text = f"Обновлено пользователей: {offset + updated_count}/{total_users}"
-        await message.reply(message_text)
+        # Fetch all users from the database
+        cursor.execute("SELECT uid FROM users")
+        users = cursor.fetchall()
 
-    await message.reply('Обновление пользовательской информации выполнено.')
+        await update_users_info()  # Вызываем функцию без передачи аргументов
+
+        await message.reply("Обновление завершено.")
+    else:
+        await message.reply("У вас нет прав для выполнения этой команды.")
+
 
 
 
