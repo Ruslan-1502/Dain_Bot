@@ -183,8 +183,17 @@ async def uid_command(message: types.Message):
 #`{uid}`
 @dp.message_handler(commands=['update'])
 async def update_handler(message: types.Message):
-    await update_users_info()
-    await update_usernames()
+    total_users = await count_users()  # Получаем общее количество пользователей
+    batch_size = 10  # Размер пакета
+
+    for offset in range(0, total_users, batch_size):
+        users = await get_users(offset, batch_size)  # Получаем пользователей для текущего пакета
+        await update_users_info(users)  # Обновляем информацию для пользователей
+
+        updated_count = min(batch_size, total_users - offset)  # Количество обновленных пользователей в текущем пакете
+        message_text = f"Обновлено пользователей: {offset + updated_count}/{total_users}"
+        await message.reply(message_text)
+
     await message.reply('Обновление пользовательской информации выполнено.')
 
 
@@ -366,12 +375,7 @@ async def process_input_handler(message: types.Message):
         await message.reply("UID не существует или уже добавлен в базу данных.")
 
 
-async def update_users_info():
-    # Fetch all users from the database
-    cursor.execute("SELECT uid FROM users")
-    users = cursor.fetchall()
-
-    # Update AR and nickname for each user
+async def update_users_info(users):
     for user in users:
         uid = user[0]
         player = await get_player(uid)
@@ -387,6 +391,16 @@ async def update_users_info():
                 WHERE uid = ?
             """, (new_ar, new_nickname, uid))
             conn.commit()
+
+async def count_users():
+    cursor.execute("SELECT COUNT(*) FROM users")
+    result = cursor.fetchone()
+    return result[0]
+
+async def get_users(offset, limit):
+    cursor.execute("SELECT uid FROM users LIMIT ?, ?", (offset, limit))
+    users = cursor.fetchall()
+    return users
 
 
 async def update_usernames():
