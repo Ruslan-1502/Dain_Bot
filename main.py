@@ -182,7 +182,6 @@ async def uid_command(message: types.Message):
 
 #`{uid}`
 @dp.message_handler(commands=['update'])
-await update_usernames()
 async def update_handler(message: types.Message):
     if message.from_user.id == CHAT_ID:
         await message.reply("Начинаю обновление пользовательской информации...")
@@ -208,7 +207,7 @@ async def update_handler(message: types.Message):
 
         users = await get_users(start_index - 1, end_index - start_index + 1)
         await update_users_info(users, message)  # Передаем список пользователей и объект message в функцию
-
+        await update_usernames()
         await message.reply("Обновление завершено.")
     else:
         await message.reply("У вас нет прав для выполнения этой команды.")
