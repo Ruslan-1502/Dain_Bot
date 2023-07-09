@@ -151,6 +151,8 @@ async def uid_command(message: types.Message):
         keyboard = InlineKeyboardMarkup()
         for row in result:
             ar, uid, nickname, username = row[3], row[2], row[4], row[1]
+            if "#" in nickname:
+                nickname = html.escape(nickname)  # Экранирование символа "#"
             output += f"AR: {ar} UID: <code>{uid}</code> Nick: {nickname}\n"
             if show_details:
                 output += f'<a href="https://enka.network/u/{uid}">Подробнее</a>\n'
@@ -167,6 +169,8 @@ async def uid_command(message: types.Message):
         photo = None  # Initialize the variable with a default value
         for row in result:
             ar, uid, nickname, chat_id = row[3], row[2], row[4], row[6]
+            if "#" in nickname:
+                nickname = html.escape(nickname)  # Экранирование символа "#"
             output += f"AR: {ar} UID: <code>{uid}</code> Nick: <a href='tg://user?id={chat_id}'>{nickname}</a>\n"
             if show_details:
                 output += f'<a href="https://enka.network/u/{uid}">Подробнее</a>\n'
