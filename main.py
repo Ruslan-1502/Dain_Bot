@@ -258,7 +258,7 @@ async def saytlar_command(message: types.Message):
         # Если бот является администратором и может удалять сообщения, удаляем сообщение пользователя
         await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
     sites = [
-        'ambr.top'
+        'ambr.top/ru',
         'genshin.gg',
         'enka.network',
         'game8.co',
