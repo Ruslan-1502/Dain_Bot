@@ -54,11 +54,7 @@ async def check_membership(bot, message: types.Message, GROUP_ID):
 def get_region(uid):
     first_digit = int(str(uid)[0])
     if first_digit == 6:
-        return "america"'[Интерактивная карта](https://act.hoyolab.com/ys/app/interactive-map/index.html?bbs_presentation_style=no_header&lang=ru-ru) - ссылка',
-]
-
-response = '\n'.join(sites)
-await message.answer(response, parse_mode=types.ParseMode.MARKDOWN_V2)
+        return "america"
     elif first_digit == 7:
         return "euro"
     elif first_digit == 8:
