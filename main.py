@@ -254,15 +254,16 @@ async def saytlar_command(message: types.Message):
         await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
 
     sites = [
-        '[Интерактивная карта](https://act.hoyolab.com/ys/app/interactive-map/index.html?bbs_presentation_style=no_header&lang=ru-ru)',
+        
         'ambr.top/ru - Энциклопедия',
-        'genshin.gg - Энциклопедия',
+        'akasha.cv - Топ вайфу мира',
         'enka.network - Билды персонажей',
+        '[Интерактивная карта](https://act.hoyolab.com/ys/app/interactive-map/index.html?bbs_presentation_style=no_header&lang=ru-ru)',
         'paimon.moe - Счетчик молитв',
         'hoyolab.com - Соц.сеть геншина',
-        'akasha.cv - Топ вайфу мира',
         'genshin.hoyoverse.com/gift - Вводить промокод',
         'genshin.aspirine.su - Геншин калькулятор',
+        'genshin.gg - Энциклопедия',
         '@guoba_cardbot - Карточки персонажей',
         '@Paimon_Bot - Карточки персонажей',
         '@akashauz_bot - Добавтить UID',
