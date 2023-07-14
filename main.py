@@ -40,7 +40,25 @@ async def check_membership(bot, message: types.Message, GROUP_ID):
         await message.reply("Я работаю только в группе https://t.me/genshinimpact_uzb")
         return False
 
-    # Проверка, что пользователь является участником хотя бы одной из групп
+    # Проверка, что пользователь является участником хотя бы sites = [
+        'ambr.top/ru - Энциклопедия',
+        'genshin.gg - Энциклопедия',
+        'enka.network - Билды персонажей',
+        'paimon.moe - Счетчик молитв',
+        'hoyolab.com - Соц.сеть геншина',
+        'akasha.cv - Топ вайфу мира',
+        'genshin.hoyoverse.com/gift - Вводить промокод',
+        'genshin.aspirine.su - Геншин калькулятор',
+        '@guoba_cardbot - Карточки персонажей',
+        '@Paimon_Bot - Карточки персонажей',
+        '@akashauz_bot - Добавтить UID',
+        't.me/genshin_donation - Донат',
+        '@genshin_gaydlar',
+        '[Интерактивная карта](https://act.hoyolab.com/ys/app/interactive-map/index.html?bbs_presentation_style=no_header&lang=ru-ru) - ссылка',
+    ]
+
+    response = '\n'.join(sites)
+    await message.answer(response, parse_mode=types.ParseMode.MARKDOWN_V2)одной из групп
     for group_id in GROUP_ID:
         try:
             member = await bot.get_chat_member(group_id, message.from_user.id)
@@ -276,8 +294,8 @@ async def saytlar_command(message: types.Message):
         't.me/genshin_donation - Донат',
         '@genshin_gaydlar',
         '[Интерактивная карта](https://act.hoyolab.com/ys/app/interactive-map/index.html?bbs_presentation_style=no_header&lang=ru-ru) - ссылка',
-     ]
-
+    ]
+    
     response = '\n'.join(sites)
     await message.answer(response, parse_mode=types.ParseMode.MARKDOWN_V2)
 # Обработчик команды /bot
