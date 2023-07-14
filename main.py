@@ -269,6 +269,7 @@ async def saytlar_command(message: types.Message):
         '@genshin_gaydlar\n',
         '[Интерактивная карта](https://act.hoyolab.com/ys/app/interactive-map/index.html?bbs_presentation_style=no_header&lang=ru-ru)\n',
     ]
+    response = ''.join(sites)
     await message.answer(response, parse_mode=types.ParseMode.MARKDOWN_V2)
 
 # Здесь должен быть код для запуска бота
