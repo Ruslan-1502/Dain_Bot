@@ -272,6 +272,7 @@ async def saytlar_command(message: types.Message):
     response = '\n'.join(sites)
     response = response.replace('.', r'\.')  # Экранирование символа '.'
     response = response.replace('-', r'\-')
+    response = response.replace('*', r'\*')
     await message.answer(response, parse_mode=types.ParseMode.MARKDOWN_V2)
 
 # Здесь должен быть код для запуска бота
