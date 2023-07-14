@@ -273,7 +273,7 @@ async def saytlar_command(message: types.Message):
         '@genshin_gaydlar',
     ]
     response = '\n'.join(sites)
-    await message.answer(response, parse_mode=types.ParseMode.MARKDOWN_V2)
+    await message.answer(response)
 
 # Обработчик команды /bot
 @dp.message_handler(commands=['bot'])
