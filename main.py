@@ -266,19 +266,17 @@ async def update_handler(message: types.Message):
         await message.reply(f'Произошла ошибка при отправке базы данных: {str(e)}')
 
 # Обработчик команды /saytlar
+from aiogram import Bot, Dispatcher, types
 @dp.message_handler(commands=['saytlar'])
 async def saytlar_command(message: types.Message):
-    if message.chat.type not in [ChatType.PRIVATE]:
-        # Получаем информацию о членстве бота в группе
+    if message.chat.type not in [types.ChatType.PRIVATE]:
         member = await bot.get_chat_member(chat_id=message.chat.id, user_id=bot.id)
-        # Если бот не является администратором или не может удалять сообщения
         if member.status != "administrator" or not member.can_delete_messages:
-            # Бот просит пользователя предоставить ему права администратора
             await message.answer("Пожалуйста, дайте мне права администратора для удаления сообщений.")
             return
 
-        # Если бот является администратором и может удалять сообщения, удаляем сообщение пользователя
         await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+
     sites = [
         'ambr.top/ru - Энциклопедия',
         'genshin.gg - Энциклопедия',
@@ -298,6 +296,10 @@ async def saytlar_command(message: types.Message):
     
     response = '\n'.join(sites)
     await message.answer(response, parse_mode=types.ParseMode.MARKDOWN_V2)
+
+# Здесь должен быть код для запуска бота
+
+
 # Обработчик команды /bot
 @dp.message_handler(commands=['bot'])
 async def bot_command(message: types.Message):
