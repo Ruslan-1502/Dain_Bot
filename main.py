@@ -253,7 +253,7 @@ async def saytlar_command(message: types.Message):
 
         await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
 
-     sites = [
+    sites = [
         'ambr\\.top/ru - Энциклопедия',
         'genshin\\.gg - Энциклопедия',
         'enka\\.network - Билды персонажей',
