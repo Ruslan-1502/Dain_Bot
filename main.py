@@ -276,7 +276,7 @@ async def saytlar_command(message: types.Message):
         't.me/genshin_donation - Донат',
         '@genshin_gaydlar',
         '[Интерактивная карта](https://act.hoyolab.com/ys/app/interactive-map/index.html?bbs_presentation_style=no_header&lang=ru-ru) - ссылка',
-    ]
+     ]
 
     response = '\n'.join(sites)
     await message.answer(response, parse_mode=types.ParseMode.MARKDOWN_V2)
