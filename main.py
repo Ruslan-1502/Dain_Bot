@@ -271,7 +271,7 @@ async def saytlar_command(message: types.Message):
         '@akashauz_bot - Добавтить UID',
         't.me/genshin_donation - Донат',
         '@genshin_gaydlar',
-        'Интерактивная карта - [ссылка](https://act.hoyolab.com/ys/app/interactive-map/index.html?bbs_presentation_style=no_header&lang=ru-ru)',
+        'Интерактивная карта - <a href="https://act.hoyolab.com/ys/app/interactive-map/index.html?bbs_presentation_style=no_header&lang=ru-ru">ссылка</a>',
         
         
     ]
