@@ -254,20 +254,21 @@ async def saytlar_command(message: types.Message):
         await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
 
     sites = [
-        'ambr.top/ru - Энциклопедия\n',
-        'genshin.gg - Энциклопедия\n',
-        'enka.network - Билды персонажей\n',
-        'paimon.moe - Счетчик молитв\n',
-        'hoyolab.com - Соц.сеть геншина\n',
-        'akasha.cv - Топ вайфу мира\n',
-        'genshin.hoyoverse.com/gift - Вводить промокод\n',
-        'genshin.aspirine.su - Геншин калькулятор\n',
-        '@guoba_cardbot - Карточки персонажей\n',
-        '@Paimon_Bot - Карточки персонажей\n',
-        '@akashauz_bot - Добавтить UID\n',
-        't.me/genshin_donation - Донат\n',
-        '@genshin_gaydlar\n',
-        '[Интерактивная карта](https://act.hoyolab.com/ys/app/interactive-map/index.html?bbs_presentation_style=no_header&lang=ru-ru)\n',
+        'ambr.top/ru - Энциклопедия',
+        'genshin.gg - Энциклопедия',
+        'enka.network - Билды персонажей',
+        'paimon.moe - Счетчик молитв',
+        'hoyolab.com - Соц.сеть геншина',
+        'akasha.cv - Топ вайфу мира',
+        'genshin.hoyoverse.com/gift - Вводить промокод',
+        'genshin.aspirine.su - Геншин калькулятор',
+        '@guoba_cardbot - Карточки персонажей',
+        '@Paimon_Bot - Карточки персонажей',
+        '@akashauz_bot - Добавтить UID',
+        't.me/genshin_donation - Донат',
+        '[Интерактивная карта](https://act.hoyolab.com/ys/app/interactive-map/index.html?bbs_presentation_style=no_header&lang=ru-ru)',
+        '@genshin_gaydlar',
+        
     ]
     response = '\n'.join(sites)
     response = response.replace('.', r'\.')  # Экранирование символа '.'
