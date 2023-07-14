@@ -269,7 +269,9 @@ async def saytlar_command(message: types.Message):
         '@guoba_cardbot - Карточки персонажей',
         '@Paimon_Bot - Карточки персонажей',
         '@akashauz_bot - Добавтить UID',
+        't.me/genshin_donation - Донат',
         '@genshin_gaydlar',
+        
         
     ]
     response = '\n'.join(sites)
