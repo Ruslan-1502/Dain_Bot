@@ -254,6 +254,7 @@ async def saytlar_command(message: types.Message):
         await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
 
     sites = [
+        '[Интерактивная карта](https://act.hoyolab.com/ys/app/interactive-map/index.html?bbs_presentation_style=no_header&lang=ru-ru)',
         'ambr.top/ru - Энциклопедия',
         'genshin.gg - Энциклопедия',
         'enka.network - Билды персонажей',
@@ -266,7 +267,6 @@ async def saytlar_command(message: types.Message):
         '@Paimon_Bot - Карточки персонажей',
         '@akashauz_bot - Добавтить UID',
         't.me/genshin_donation - Донат',
-        '[Интерактивная карта](https://act.hoyolab.com/ys/app/interactive-map/index.html?bbs_presentation_style=no_header&lang=ru-ru)',
         '@genshin_gaydlar',
         
     ]
