@@ -275,7 +275,7 @@ async def saytlar_command(message: types.Message):
     ]
     response = '\n'.join(sites)
     for site in sites:
-    await message.answer(site, parse_mode=types.ParseMode.HTML)
+        await message.answer(site, parse_mode=types.ParseMode.HTML)
 
 # Обработчик команды /bot
 @dp.message_handler(commands=['bot'])
