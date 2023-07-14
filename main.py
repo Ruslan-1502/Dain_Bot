@@ -263,12 +263,12 @@ async def saytlar_command(message: types.Message):
         'enka.network - Билды персонажей',
         'paimon.moe - Счетчик молитв',
         'hoyolab.com - Соц.сеть геншина',
-        'akasha.cv - Узнай на каком месте ты',
+        'akasha.cv - Топ вайфу мира',
         'genshin.hoyoverse.com/gift - Вводить промокод',
         'genshin.aspirine.su - Геншин калькулятор',
         '@guoba_cardbot - Карточки персонажей',
         '@Paimon_Bot - Карточки персонажей',
-        '@akashauz_bot',
+        '@akashauz_bot - Добавтить UID',
         '@genshin_gaydlar',
         
     ]
