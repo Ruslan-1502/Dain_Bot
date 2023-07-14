@@ -258,8 +258,8 @@ async def saytlar_command(message: types.Message):
         # Если бот является администратором и может удалять сообщения, удаляем сообщение пользователя
         await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
     sites = [
-        'ambr.top/ru - Энциклопедия геншин',
-        'genshin.gg - Энциклопедия геншин',
+        'ambr.top/ru - Энциклопедия',
+        'genshin.gg - Энциклопедия',
         'enka.network - Билды персонажей',
         'paimon.moe - Счетчик молитв',
         'hoyolab.com - Соц.сеть геншина',
@@ -271,6 +271,7 @@ async def saytlar_command(message: types.Message):
         '@akashauz_bot - Добавтить UID',
         't.me/genshin_donation - Донат',
         '@genshin_gaydlar',
+        'Интерактивная карта - [ссылка](https://act.hoyolab.com/ys/app/interactive-map/index.html?bbs_presentation_style=no_header&lang=ru-ru)',
         
         
     ]
