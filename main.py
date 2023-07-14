@@ -267,6 +267,7 @@ async def saytlar_command(message: types.Message):
         'akasha.cv',
         'genshin.hoyoverse.com/gift',
         'genshin.aspirine.su',
+        '@akashauz_bot',
         '@guoba_cardbot',
         '@genshin_gaydlar',
         '@Paimon_Bot'
