@@ -258,19 +258,19 @@ async def saytlar_command(message: types.Message):
         # Если бот является администратором и может удалять сообщения, удаляем сообщение пользователя
         await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
     sites = [
-        'ambr.top/ru',
-        'genshin.gg',
-        'enka.network',
-        'game8.co',
-        'paimon.moe',
-        'hoyolab.com',
-        'akasha.cv',
-        'genshin.hoyoverse.com/gift',
-        'genshin.aspirine.su',
+        'ambr.top/ru - Энциклопедия геншин',
+        'genshin.gg - Энциклопедия геншин',
+        'enka.network - Билды персонажей',
+        'paimon.moe - Счетчик молитв',
+        'hoyolab.com - Соц.сеть геншина',
+        'akasha.cv - Узнай на каком месте ты',
+        'genshin.hoyoverse.com/gift - Вводить промокод',
+        'genshin.aspirine.su - Геншин калькулятор',
+        '@guoba_cardbot - Карточки персонажей',
+        '@Paimon_Bot - Карточки персонажей',
         '@akashauz_bot',
-        '@guoba_cardbot',
         '@genshin_gaydlar',
-        '@Paimon_Bot'
+        
     ]
     response = '\n'.join(sites)
     await message.answer(response)
