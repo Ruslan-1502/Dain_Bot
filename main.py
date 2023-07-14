@@ -94,7 +94,41 @@ async def start_command(message: types.Message):
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True).add(button_add, button_donate)
     start_text = (
     "Добро пожаловать! Воспользуйтесь кнопками ниже или командами:\n\n"
-    "/uid - Показать список всех игроков\n"
+    "/uid - Показать список всех игроков\n"2023-07-14T22:51:24.721549+00:00 heroku[router]: at=info method=POST path="/webhook/5929211650:AAHC5PDld7ESFqwe9IcX4ccGir0eVDHgfPM" host=dain.herokuapp.com request_id=a0fcda3b-1dc7-4771-a8b5-5dc61e772280 fwd="91.108.6.117" dyno=web.1 connect=0ms service=20ms status=500 bytes=245 protocol=https
+2023-07-14T22:51:24.718803+00:00 app[web.1]: ERROR:aiohttp.server:Error handling request
+2023-07-14T22:51:24.718818+00:00 app[web.1]: Traceback (most recent call last):
+2023-07-14T22:51:24.718819+00:00 app[web.1]: File "/app/.heroku/python/lib/python3.10/site-packages/aiohttp/web_protocol.py", line 433, in _handle_request
+2023-07-14T22:51:24.718820+00:00 app[web.1]: resp = await request_handler(request)
+2023-07-14T22:51:24.718820+00:00 app[web.1]: File "/app/.heroku/python/lib/python3.10/site-packages/aiohttp/web_app.py", line 504, in _handle
+2023-07-14T22:51:24.718820+00:00 app[web.1]: resp = await handler(request)
+2023-07-14T22:51:24.718820+00:00 app[web.1]: File "/app/.heroku/python/lib/python3.10/site-packages/aiohttp/web_urldispatcher.py", line 954, in _iter
+2023-07-14T22:51:24.718822+00:00 app[web.1]: resp = await method()
+2023-07-14T22:51:24.718822+00:00 app[web.1]: File "/app/.heroku/python/lib/python3.10/site-packages/aiogram/dispatcher/webhook.py", line 139, in post
+2023-07-14T22:51:24.718822+00:00 app[web.1]: results = await self.process_update(update)
+2023-07-14T22:51:24.718823+00:00 app[web.1]: File "/app/.heroku/python/lib/python3.10/site-packages/aiogram/dispatcher/webhook.py", line 190, in process_update
+2023-07-14T22:51:24.718824+00:00 app[web.1]: return fut.result()
+2023-07-14T22:51:24.718824+00:00 app[web.1]: File "/app/.heroku/python/lib/python3.10/site-packages/aiogram/dispatcher/handler.py", line 117, in notify
+2023-07-14T22:51:24.718825+00:00 app[web.1]: response = await handler_obj.handler(*args, **partial_data)
+2023-07-14T22:51:24.718826+00:00 app[web.1]: File "/app/.heroku/python/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py", line 256, in process_update
+2023-07-14T22:51:24.718826+00:00 app[web.1]: return await self.message_handlers.notify(update.message)
+2023-07-14T22:51:24.718826+00:00 app[web.1]: File "/app/.heroku/python/lib/python3.10/site-packages/aiogram/dispatcher/handler.py", line 117, in notify
+2023-07-14T22:51:24.718826+00:00 app[web.1]: response = await handler_obj.handler(*args, **partial_data)
+2023-07-14T22:51:24.718826+00:00 app[web.1]: File "/app/main.py", line 276, in saytlar_command
+2023-07-14T22:51:24.718827+00:00 app[web.1]: await message.answer(response, parse_mode=types.ParseMode.MARKDOWN_V2)
+2023-07-14T22:51:24.718828+00:00 app[web.1]: File "/app/.heroku/python/lib/python3.10/site-packages/aiogram/types/message.py", line 438, in answer
+2023-07-14T22:51:24.718828+00:00 app[web.1]: return await self.bot.send_message(
+2023-07-14T22:51:24.718828+00:00 app[web.1]: File "/app/.heroku/python/lib/python3.10/site-packages/aiogram/bot/bot.py", line 346, in send_message
+2023-07-14T22:51:24.718828+00:00 app[web.1]: result = await self.request(api.Methods.SEND_MESSAGE, payload)
+2023-07-14T22:51:24.718828+00:00 app[web.1]: File "/app/.heroku/python/lib/python3.10/site-packages/aiogram/bot/base.py", line 236, in request
+2023-07-14T22:51:24.718828+00:00 app[web.1]: return await api.make_request(await self.get_session(), self.server, self.__token, method, data, files,
+2023-07-14T22:51:24.718828+00:00 app[web.1]: File "/app/.heroku/python/lib/python3.10/site-packages/aiogram/bot/api.py", line 140, in make_request
+2023-07-14T22:51:24.718829+00:00 app[web.1]: return check_result(method, response.content_type, response.status, await response.text())
+2023-07-14T22:51:24.718829+00:00 app[web.1]: File "/app/.heroku/python/lib/python3.10/site-packages/aiogram/bot/api.py", line 115, in check_result
+2023-07-14T22:51:24.718829+00:00 app[web.1]: exceptions.BadRequest.detect(description)
+2023-07-14T22:51:24.718829+00:00 app[web.1]: File "/app/.heroku/python/lib/python3.10/site-packages/aiogram/utils/exceptions.py", line 140, in detect
+2023-07-14T22:51:24.718830+00:00 app[web.1]: raise err(cls.text or description)
+2023-07-14T22:51:24.718830+00:00 app[web.1]: aiogram.utils.exceptions.CantParseEntities: Can't parse entities: can't find end of italic entity at byte offset 593
+
     "/uid @nickname - Показать информацию об игроке с данным ником\n"
     "/uid <region> - Показать список игроков для указанного региона (america, euro, asia, sar)\n")
     await message.reply(start_text, reply_markup=keyboard)
@@ -273,6 +307,7 @@ async def saytlar_command(message: types.Message):
     response = response.replace('.', r'\.')  # Экранирование символа '.'
     response = response.replace('-', r'\-')
     response = response.replace('*', r'\*')
+    response = response.replace('_', r'\_')
     await message.answer(response, parse_mode=types.ParseMode.MARKDOWN_V2)
 
 # Здесь должен быть код для запуска бота
