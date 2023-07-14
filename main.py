@@ -271,12 +271,12 @@ async def saytlar_command(message: types.Message):
         '@akashauz_bot - Добавтить UID',
         't.me/genshin_donation - Донат',
         '@genshin_gaydlar',
-        'Интерактивная карта - <a href="https://act.hoyolab.com/ys/app/interactive-map/index.html?bbs_presentation_style=no_header&lang=ru-ru">ссылка</a>',
+        'Интерактивная карта - [ссылка](https://act.hoyolab.com/ys/app/interactive-map/index.html?bbs_presentation_style=no_header&lang=ru-ru)',
         
         
     ]
     response = '\n'.join(sites)
-    await message.answer(response)
+    await message.answer(response, disable_web_page_preview=True)
 
 # Обработчик команды /bot
 @dp.message_handler(commands=['bot'])
