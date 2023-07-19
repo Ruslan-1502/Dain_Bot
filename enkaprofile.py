@@ -7,7 +7,7 @@ async def encprofile(uid):
         try:
             ENCpy = await encard.enc(uids=uid)
             profile = await encard.profile(enc=ENCpy, image=True)
-        except encbanner.CostumeNotFoundError:
+        except AttributeError:
             print(f"Костюм не найден для uid {uid}")
             return profile  # Возвращаем profile при возникновении исключения
         except Exception as e:
