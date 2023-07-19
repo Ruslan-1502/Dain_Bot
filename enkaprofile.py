@@ -7,7 +7,7 @@ async def encprofile(uid):
     async with encbanner.ENC() as encard:
         try:
             ENCpy = await encard.enc(uids=uid)
-            profile = await encard.create(ENCpy, image=True)
+            profile = await encard.profile(enc=ENCpy, image=True)
         except AttributeError:
             print(f"Карточка игрока не найдена для uid {uid}")  # Выводим uid с ошибкой
         except Exception as e:
