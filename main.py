@@ -17,8 +17,8 @@ from GetInfo import get_player
 from enkaprofile import encprofile
 from characters import characters
 
-TOKEN = BOT_TOKEN
-bot = Bot(token=TOKEN)
+
+bot = Bot(BOT_TOKEN)
 dp = Dispatcher(bot)
 CHAT_ID = 254336259
 GROUP_ID = [-1001888345564, -1001883016437, -1001918713467]
