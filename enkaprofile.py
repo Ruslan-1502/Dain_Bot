@@ -13,3 +13,4 @@ async def encprofile(uid):
         except Exception as e:
             print(f"Произошла ошибка с uid {uid}: {e}")  # Обработка других ошибок и вывод uid
     return profile
+#glgfgl[g
