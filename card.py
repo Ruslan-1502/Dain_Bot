@@ -5,6 +5,9 @@ from enkanetwork import EnkaNetworkAPI
 from generator import generate_image
 import io
 
+import aiohttp
+import asyncio
+
 import sqlite3
 from database import create_connection
 # Создание объекта EnkaNetworkAPI
