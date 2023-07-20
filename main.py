@@ -49,6 +49,15 @@ logging.basicConfig(level=logging.INFO)
 # Create an EnkaNetworkAPI object
 enka_api = EnkaNetworkAPI()
 
+async def on_startup(dispatcher):
+    await dp.bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
+    
+async def on_startup_handler():
+    await on_startup(dp)
+    
+async def on_shutdown(dispatcher):
+    await dp.bot.delete_webhook()
+
 
 
 async def check_membership(bot, message: types.Message, GROUP_ID):
@@ -515,4 +524,4 @@ async def update_usernames():
 
 # Start the bot
 if __name__ == '__main__':
-    asyncio.run(executor.start_polling(dp))
+    executor.start_webhook(dispatcher=dp, webhook_path=WEBHOOK_PATH, on_startup=on_startup, on_shutdown=on_shutdown, host=WEBAPP_HOST, port=WEBAPP_PORT)
