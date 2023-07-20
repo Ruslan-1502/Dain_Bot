@@ -439,7 +439,7 @@ async def process_input_handler(message: types.Message):
     username = message.from_user.username
     first_name = message.from_user.first_name
 
-    success = await add_uid(int(uid), chat_id, username, first_name)
+    success = await add_uid(uid, chat_id, username, first_name)
     if success:
         await message.reply("UID успешно добавлен!")
     else:
