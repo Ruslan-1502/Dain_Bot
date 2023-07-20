@@ -29,7 +29,7 @@ async def send_characters(message: types.Message):
         await message.reply("Пожалуйста, введите идентификатор пользователя (UID), имя пользователя или имя после команды /card.")
         return
 
-    uid = None
+    uid = args
 
     # Проверка, является ли args числом (т.е. UID)
     if args.isdigit():
