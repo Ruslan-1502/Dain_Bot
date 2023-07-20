@@ -1,0 +1,8 @@
+enkanetwork.py
+pillow
+pydantic
+requests
+websockets
+aiohttp
+aiogram
+enkacard
