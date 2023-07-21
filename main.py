@@ -375,7 +375,7 @@ card.bot = bot
 card.dp = dp
 
 # Register the /card command handler
-dp.register_message_handler(send_characters, commands=['card'])
+dp.register_message_handler(lambda message: send_characters(message, bot), commands=['card'])
 
 # Register the callback query handler for characters
 dp.register_callback_query_handler(process_character_callback, lambda c: c.data.startswith('character:'))
