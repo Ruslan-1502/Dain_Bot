@@ -1,6 +1,6 @@
-enkanetwork.py
+enkanetwork
 pillow
-pydantic
+pydantic==2.0.2
 requests
 websockets
 aiohttp
