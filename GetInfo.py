@@ -13,9 +13,9 @@ async def get_player(uid):
     except asyncio.TimeoutError:
         print("Timeout error occurred")
         return None
-    # except ValueError:
-    #     print("Value error occurred")
-    #     return None
-    # except EnkaPlayerNotFound:
-    #     print("Player not found")
-    #     return None
+    except ValueError:
+        print("Value error occurred")
+        return None
+    except EnkaPlayerNotFound:
+        print("Player not found")
+        return None
