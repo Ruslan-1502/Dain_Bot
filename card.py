@@ -1,4 +1,4 @@
-from aiogram import types
+from aiogram import types, Dispatcher, Bot, executor, filters, Context
 from aiogram.dispatcher import Dispatcher
 import html
 
@@ -23,6 +23,18 @@ dp = None
 
 user_button_access = {}
 
+
+# Функция для установки доступа к inline кнопкам для пользователя
+async def set_user_button_access(ctx: Context, access: bool):
+    user_id = ctx.from_user.id
+    user_button_access[user_id] = access
+
+
+# Функция для получения доступа к inline кнопкам для пользователя
+async def get_user_button_access(ctx: Context):
+    user_id = ctx.from_user.id
+    return user_button_access.get(user_id, False)
+
 async def send_generated_image(chat_id, image_bytes, caption):
     try:
         logging.info(f"Отправка изображения в чат {chat_id}")
@@ -40,8 +52,8 @@ def chunks(lst, n):
 
 async def send_characters(message: types.Message,locale: Language = Language.RU):
     logging.info(f"Обработка сообщения от {message.from_user.id}")
-    user_id = message.from_user.id  # Идентификатор пользователя
-    user_button_access[user_id] = True  # Позволим пользователю доступ к inline кнопкам
+    ctx = await dp.get_context(message)  # Получаем объект context для текущего пользователя
+    await set_user_button_access(ctx, True)  # Позволим пользователю доступ к inline кнопкам
     args = message.get_args()
 
     if not args:
@@ -116,8 +128,8 @@ import traceback
 
 async def process_character_callback(callback_query: types.CallbackQuery):
     logging.info(f"Обработка callback запроса от {callback_query.from_user.id}")
-    user_id = callback_query.from_user.id  # Идентификатор пользователя
-    if user_id not in user_button_access or not user_button_access[user_id]:
+    ctx = await dp.get_context(callback_query)  # Получаем объект context для текущего пользователя
+    if not await get_user_button_access(ctx):
         await callback_query.answer("Извините, у вас нет доступа к этой функции.")
         return
     try:
