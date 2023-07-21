@@ -9,6 +9,8 @@ from enkaprofile import encprofile
 
 import aiohttp
 import asyncio
+import logging
+logging.basicConfig(level=logging.INFO)  # Или DEBUG, если вам нужно больше информации
 
 import sqlite3
 from database import create_connection
@@ -18,8 +20,13 @@ bot = None
 dp = None
 
 async def send_generated_image(chat_id, image_bytes, caption):
-    image_io = io.BytesIO(image_bytes)
-    await bot.send_photo(chat_id, photo=image_io, caption=caption)
+    try:
+        logging.info(f"Отправка изображения в чат {chat_id}")
+        image_io = io.BytesIO(image_bytes)
+        await bot.send_photo(chat_id, photo=image_io, caption=caption)
+    except Exception as e:
+        logging.error(f"Ошибка при отправке изображения: {e}")
+        traceback.print_exc()
 
 def chunks(lst, n):
     """Yield successive n-sized chunks from lst."""
@@ -28,6 +35,7 @@ def chunks(lst, n):
 
 
 async def send_characters(message: types.Message):
+    logging.info(f"Обработка сообщения от {message.from_user.id}")
     args = message.get_args()
 
     if not args:
@@ -102,6 +110,7 @@ async def send_characters(message: types.Message):
 import traceback
 
 async def process_character_callback(callback_query: types.CallbackQuery):
+    logging.info(f"Обработка callback запроса от {callback_query.from_user.id}")
     try:
         data = callback_query.data.split(':')
         uid = int(data[1])
@@ -125,6 +134,5 @@ async def process_character_callback(callback_query: types.CallbackQuery):
 
         await callback_query.answer()
     except Exception as e:
-        traceback.print_exc()  # Выводим исключение для отладки
-        # Обработка ошибки, если необходимо
-
+        logging.error(f"Ошибка при обработке callback запроса: {e}")
+        traceback.print_exc() 
