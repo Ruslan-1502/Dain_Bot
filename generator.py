@@ -20,7 +20,7 @@ from utils import (fade_asset_icon, fade_character_art, format_statistics,
 
 
 async def generate_image(
-    data: EnkaNetworkResponse, character: CharacterInfo, locale: Language = Language.EN
+    data: EnkaNetworkResponse, character: CharacterInfo, locale: Language = Language.RU
 ):
     """Create language-specific asset-getter"""
     asset_reference = Assets(lang=locale)
