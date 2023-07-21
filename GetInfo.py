@@ -16,6 +16,6 @@ async def get_player(uid):
     # except ValueError:
     #     print("Value error occurred")
     #     return None
-    except EnkaPlayerNotFound:
-        print("Player not found")
-        return None
+    # except EnkaPlayerNotFound:
+    #     print("Player not found")
+    #     return None
