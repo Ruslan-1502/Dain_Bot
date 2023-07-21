@@ -177,14 +177,7 @@ async def uid_command(message: types.Message):
             nickname = nickname.replace("#", "")  # Удаление символа "#"
             output += f"AR: {ar} UID: <code>{uid}</code> Nick: {nickname}\n"
             if show_details:
-                output += f'<a href="https://enka.network/u/{uid}">Подробнее</a>\n'
-                result = await encprofile(uid)
-                if result and 'img' in result:
-                    photo = result['img']
-                    image_output = BytesIO()
-                    photo.save(image_output, format='PNG')
-                    image_output.seek(0)
-                    await bot.send_photo(chat_id=message.chat.id, photo=image_output)
+                output += f"Чтобы посмотреть персонажей <code>/card {uid}</code> "
         keyboard.add(InlineKeyboardButton(f"Добавить свой UID", url=f"https://t.me/akashauz_bot"))
         await message.answer(output, reply_markup=keyboard, parse_mode=types.ParseMode.HTML)
     else:
@@ -194,14 +187,7 @@ async def uid_command(message: types.Message):
             nickname = nickname.replace("#", "")  # Удаление символа "#"
             output += f"AR: {ar} UID: <code>{uid}</code> Nick: <a href='tg://user?id={chat_id}'>{nickname}</a>\n"
             if show_details:
-                output += f'<a href="https://enka.network/u/{uid}">Подробнее</a>\n'
-                result = await encprofile(uid)
-                if result and 'img' in result:
-                    photo = result['img']
-                    image_output = BytesIO()
-                    photo.save(image_output, format='PNG')
-                    image_output.seek(0)
-                    await bot.send_photo(chat_id=message.chat.id, photo=image_output)
+                output += f"Чтобы посмотреть персонажей <code>/card {uid}</code> "
         await message.answer(output, parse_mode=types.ParseMode.HTML)
 
 
