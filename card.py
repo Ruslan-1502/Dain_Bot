@@ -77,7 +77,7 @@ async def send_characters(message: types.Message,locale: Language = Language.RU)
         async with enka_api:
             user_data = await enka_api.fetch_user_by_uid(uid)
     except Exception as e:
-        await message.reply(f"Произошла ошибка при получении данных пользователя: {e}")
+        await message.reply(f"Такого пользователя нет в Akasha или такого аккаунта с этим UID не существует")
         return
 
     if not user_data or not user_data.characters:
