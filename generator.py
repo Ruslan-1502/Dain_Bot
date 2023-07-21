@@ -19,7 +19,7 @@ from utils import (fade_asset_icon, fade_character_art, format_statistics,
                    open_image, scale_image)
 
 
-def generate_image(
+async def generate_image(
     data: EnkaNetworkResponse, character: CharacterInfo, locale: Language = Language.EN
 ):
     """Create language-specific asset-getter"""
