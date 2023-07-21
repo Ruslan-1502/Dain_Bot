@@ -4,6 +4,8 @@ from aiogram.dispatcher import Dispatcher
 from enkanetwork import EnkaNetworkAPI
 from generator import generate_image
 import io
+from io import BytesIO
+from enkaprofile import encprofile
 
 import aiohttp
 import asyncio
@@ -80,6 +82,13 @@ async def send_characters(message: types.Message):
     for row_buttons in chunks(buttons, 4):
         keyboard.row(*row_buttons)
 
+    result = await encprofile(uid)
+    if result and 'img' in result:
+        photo = result['img']
+        image_output = BytesIO()
+        photo.save(image_output, format='PNG')
+        image_output.seek(0)
+        await bot.send_photo(chat_id=message.chat.id, photo=image_output)            
     await message.reply("Выберите персонажа:", reply_markup=keyboard)
 
 
