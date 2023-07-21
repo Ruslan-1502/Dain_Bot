@@ -21,6 +21,8 @@ enka_api = EnkaNetworkAPI()
 bot = None
 dp = None
 
+user_button_access = {}
+
 async def send_generated_image(chat_id, image_bytes, caption):
     try:
         logging.info(f"Отправка изображения в чат {chat_id}")
@@ -38,6 +40,8 @@ def chunks(lst, n):
 
 async def send_characters(message: types.Message,locale: Language = Language.RU):
     logging.info(f"Обработка сообщения от {message.from_user.id}")
+    user_id = message.from_user.id  # Идентификатор пользователя
+    user_button_access[user_id] = True  # Позволим пользователю доступ к inline кнопкам
     args = message.get_args()
 
     if not args:
@@ -112,6 +116,10 @@ import traceback
 
 async def process_character_callback(callback_query: types.CallbackQuery):
     logging.info(f"Обработка callback запроса от {callback_query.from_user.id}")
+    user_id = callback_query.from_user.id  # Идентификатор пользователя
+    if user_id not in user_button_access or not user_button_access[user_id]:
+        await callback_query.answer("Извините, у вас нет доступа к этой функции.")
+        return
     try:
         data = callback_query.data.split(':')
         uid = int(data[1])
