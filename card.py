@@ -82,14 +82,17 @@ async def send_characters(message: types.Message):
     for row_buttons in chunks(buttons, 4):
         keyboard.row(*row_buttons)
 
-    # result = await encprofile(uid)
-    # if result and 'img' in result:
-    #     photo = result['img']
-    #     image_output = BytesIO()
-    #     photo.save(image_output, format='PNG')
-    #     image_output.seek(0)
-    #     await bot.send_photo(chat_id=message.chat.id, photo=image_output)            
-    await message.reply("Выберите персонажа:", reply_markup=keyboard)
+    result = await encprofile(uid)
+    if result and 'img' in result:
+        photo = result['img']
+        image_output = BytesIO()
+        photo.save(image_output, format='PNG')
+        image_output.seek(0)
+        caption_text = "Выберите персонажа:"
+        await bot.send_photo(chat_id=message.chat.id, photo=image_output, caption=caption_text, reply_markup=keyboard)
+    else:
+        caption_text = "Выберите персонажа:"
+        await message.reply(caption_text, reply_markup=keyboard)
 
 
 async def process_character_callback(callback_query: types.CallbackQuery):
