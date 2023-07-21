@@ -99,25 +99,32 @@ async def send_characters(message: types.Message):
         await message.reply(caption_text, reply_markup=keyboard)
 
 
+import traceback
+
 async def process_character_callback(callback_query: types.CallbackQuery):
-    data = callback_query.data.split(':')
-    uid = int(data[1])
-    character_name = data[2]
+    try:
+        data = callback_query.data.split(':')
+        uid = int(data[1])
+        character_name = data[2]
 
-    async with enka_api:
-        user_data = await enka_api.fetch_user_by_uid(uid)
-        characters = user_data.characters
-        character_info = next(
-            (character for character in characters if character.name == character_name),
-            None,
-        )
-
-        if character_info:
-            image_buffer = generate_image(user_data, character_info)
-            await send_generated_image(
-                callback_query.message.chat.id,
-                image_buffer.getvalue(),
-                character_name,
+        async with enka_api:
+            user_data = await enka_api.fetch_user_by_uid(uid)
+            characters = user_data.characters
+            character_info = next(
+                (character for character in characters if character.name == character_name),
+                None,
             )
 
-    await callback_query.answer()
+            if character_info:
+                image_buffer = await generate_image(user_data, character_info)
+                await send_generated_image(
+                    callback_query.message.chat.id,
+                    image_buffer.getvalue(),
+                    character_name,
+                )
+
+        await callback_query.answer()
+    except Exception as e:
+        traceback.print_exc()  # Выводим исключение для отладки
+        # Обработка ошибки, если необходимо
+
