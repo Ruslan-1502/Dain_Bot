@@ -5,4 +5,4 @@ websockets
 aiohttp
 aiogram
 enkacard
-enkanetwork
+enkanetwork.py
