@@ -119,7 +119,9 @@ async def start_command(message: types.Message):
     "Добро пожаловать! Воспользуйтесь кнопками ниже или командами:\n\n"
     "/uid - Показать список всех игроков\n"
     "/uid @nickname - Показать информацию об игроке с данным ником\n"
-    "/uid <region> - Показать список игроков для указанного региона (america, euro, asia, sar)\n")
+    "/uid <region> - Показать список игроков для указанного региона (america, euro, asia, sar)\n"
+    "/card @nickname - Показать информацию о персонажей с данным ником\n"
+    "/card UID - Показать информацию о персонажей с данным UID\n")
     await message.reply(start_text, reply_markup=keyboard)
 
 
