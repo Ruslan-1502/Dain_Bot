@@ -1,6 +1,7 @@
 from aiogram import types, Dispatcher, Bot, executor, filters, Context
 from aiogram.dispatcher import Dispatcher
 import html
+import traceback
 
 from enkanetwork import EnkaNetworkAPI,Assets, EnkaNetworkResponse, Language
 from enkanetwork.model.character import CharacterInfo
@@ -21,19 +22,6 @@ enka_api = EnkaNetworkAPI()
 bot = None
 dp = None
 
-user_button_access = {}
-
-
-# Функция для установки доступа к inline кнопкам для пользователя
-async def set_user_button_access(ctx: Context, access: bool):
-    user_id = ctx.from_user.id
-    user_button_access[user_id] = access
-
-
-# Функция для получения доступа к inline кнопкам для пользователя
-async def get_user_button_access(ctx: Context):
-    user_id = ctx.from_user.id
-    return user_button_access.get(user_id, False)
 
 async def send_generated_image(chat_id, image_bytes, caption):
     try:
@@ -52,8 +40,6 @@ def chunks(lst, n):
 
 async def send_characters(message: types.Message,locale: Language = Language.RU):
     logging.info(f"Обработка сообщения от {message.from_user.id}")
-    ctx = await dp.get_context(message)  # Получаем объект context для текущего пользователя
-    await set_user_button_access(ctx, True)  # Позволим пользователю доступ к inline кнопкам
     args = message.get_args()
 
     if not args:
@@ -105,7 +91,7 @@ async def send_characters(message: types.Message,locale: Language = Language.RU)
     keyboard = types.InlineKeyboardMarkup()
 
     buttons = [
-        types.InlineKeyboardButton(text=character.name, callback_data=f'character:{uid}:{character.name}')
+        types.InlineKeyboardButton(text=character.name, callback_data=f'character:{uid}:{character.name}:{message.from_user.id}')
         for character in characters
     ]
 
@@ -124,19 +110,23 @@ async def send_characters(message: types.Message,locale: Language = Language.RU)
         await message.reply(caption_text, reply_markup=keyboard, parse_mode=types.ParseMode.HTML)
 
 
-import traceback
+
 
 async def process_character_callback(callback_query: types.CallbackQuery):
     logging.info(f"Обработка callback запроса от {callback_query.from_user.id}")
-    ctx = await dp.get_context(callback_query)  # Получаем объект context для текущего пользователя
-    if not await get_user_button_access(ctx):
-        await callback_query.answer("Извините, у вас нет доступа к этой функции.")
-        return
     try:
         data = callback_query.data.split(':')
         uid = int(data[1])
         character_name = data[2]
-
+        user_id = int(data[3])
+        # Если идентификатор пользователя в callback запросе не совпадает с идентификатором пользователя, который вызвал команду, игнорируем запрос
+        if callback_query.from_user.id != user_id:
+            await callback_query.answer("У вас нет доступа к этой команде.")
+            return
+        # Если идентификатор пользователя в callback запросе не совпадает с идентификатором пользователя, который вызвал команду, игнорируем запрос
+        if callback_query.from_user.id != user_id:
+            await callback_query.answer("У вас нет доступа к этой команде.")
+            return
         async with enka_api:
             user_data = await enka_api.fetch_user_by_uid(uid)
             characters = user_data.characters
