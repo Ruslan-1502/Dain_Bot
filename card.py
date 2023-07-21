@@ -1,5 +1,6 @@
 from aiogram import types
 from aiogram.dispatcher import Dispatcher
+import html
 
 from enkanetwork import EnkaNetworkAPI,Assets, EnkaNetworkResponse, Language
 from enkanetwork.model.character import CharacterInfo
@@ -101,9 +102,10 @@ async def send_characters(message: types.Message,locale: Language = Language.RU)
         image_output = BytesIO()
         photo.save(image_output, format='PNG')
         image_output.seek(0)
-        await bot.send_photo(chat_id=message.chat.id, photo=image_output, caption=caption_text, reply_markup=keyboard)
+        await bot.send_photo(chat_id=message.chat.id, photo=image_output, caption=caption_text, reply_markup=keyboard, 
+                             parse_mode=types.ParseMode.HTML)
     else:
-        await message.reply(caption_text, reply_markup=keyboard)
+        await message.reply(caption_text, reply_markup=keyboard, parse_mode=types.ParseMode.HTML)
 
 
 import traceback
