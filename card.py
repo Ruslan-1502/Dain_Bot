@@ -99,7 +99,7 @@ async def process_character_callback(callback_query: types.CallbackQuery):
         if character_info:
             image_buffer = generate_image(user_data, character_info)
             await send_generated_image(
-                callback_query.from_user.id,
+                callback_query.message.chat.id,
                 image_buffer.getvalue(),
                 character_name,
             )
