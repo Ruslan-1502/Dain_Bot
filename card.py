@@ -1,7 +1,8 @@
 from aiogram import types
 from aiogram.dispatcher import Dispatcher
 
-from enkanetwork import EnkaNetworkAPI
+from enkanetwork import EnkaNetworkAPI,Assets, EnkaNetworkResponse, Language
+from enkanetwork.model.character import CharacterInfo
 from generator import generate_image
 import io
 from io import BytesIO
@@ -34,7 +35,7 @@ def chunks(lst, n):
         yield lst[i:i + n]
 
 
-async def send_characters(message: types.Message):
+async def send_characters(message: types.Message,locale: Language = Language.RU):
     logging.info(f"Обработка сообщения от {message.from_user.id}")
     args = message.get_args()
 
