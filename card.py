@@ -1,4 +1,4 @@
-from aiogram import types, Dispatcher, Bot, executor, filters, Context
+from aiogram import types, Dispatcher, Bot, executor, filters
 from aiogram.dispatcher import Dispatcher
 import html
 import traceback
