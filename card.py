@@ -68,7 +68,7 @@ async def send_characters(message: types.Message):
         user_data = await enka_api.fetch_user_by_uid(uid)
 
     if not user_data or not user_data.characters:
-        await message.reply(f"Пользователь с UID {uid} не найден или у него нет персонажей.")
+        await message.reply(f"Пользователь с UID {uid} не найден или у него закрытый стенд.")
         return
 
     characters = user_data.characters
@@ -82,13 +82,13 @@ async def send_characters(message: types.Message):
     for row_buttons in chunks(buttons, 4):
         keyboard.row(*row_buttons)
 
-    result = await encprofile(uid)
-    if result and 'img' in result:
-        photo = result['img']
-        image_output = BytesIO()
-        photo.save(image_output, format='PNG')
-        image_output.seek(0)
-        await bot.send_photo(chat_id=message.chat.id, photo=image_output)            
+    # result = await encprofile(uid)
+    # if result and 'img' in result:
+    #     photo = result['img']
+    #     image_output = BytesIO()
+    #     photo.save(image_output, format='PNG')
+    #     image_output.seek(0)
+    #     await bot.send_photo(chat_id=message.chat.id, photo=image_output)            
     await message.reply("Выберите персонажа:", reply_markup=keyboard)
 
 
