@@ -64,8 +64,12 @@ async def send_characters(message: types.Message):
         await message.reply("Пользователь не найден. Пожалуйста, введите правильный UID, имя пользователя или имя.")
         return
 
-    async with enka_api:
-        user_data = await enka_api.fetch_user_by_uid(uid)
+    try:
+        async with enka_api:
+            user_data = await enka_api.fetch_user_by_uid(uid)
+    except Exception as e:
+        await message.reply(f"Произошла ошибка при получении данных пользователя: {e}")
+        return
 
     if not user_data or not user_data.characters:
         await message.reply(f"Пользователь с UID {uid} не найден или у него закрытый стенд.")
