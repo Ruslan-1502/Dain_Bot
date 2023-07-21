@@ -94,7 +94,7 @@ async def send_characters(message: types.Message,locale: Language = Language.RU)
 
     for row_buttons in chunks(buttons, 4):
         keyboard.row(*row_buttons)
-    caption_text = "Выберите персонажа:"
+    caption_text = f"Выберите персонажа:{uid}"
     result = await encprofile(uid)
     if result and 'img' in result:
         photo = result['img']
