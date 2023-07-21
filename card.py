@@ -38,7 +38,11 @@ def chunks(lst, n):
         yield lst[i:i + n]
 
 
+last_card_message_id = None  # Переменная для хранения ID последнего сообщения с командой /card
+
 async def send_characters(message: types.Message, bot: Bot, locale: Language = Language.RU):
+    global last_card_message_id  # Объявляем, что будем использовать глобальную переменную
+
     logging.info(f"Обработка сообщения от {message.from_user.id}")
     args = message.get_args()
 
@@ -108,19 +112,18 @@ async def send_characters(message: types.Message, bot: Bot, locale: Language = L
         # Исправлено: получаем chat_id из объекта message
         chat_id = message.chat.id
 
-        # Получаем message_id предыдущего сообщения (если оно существует)
-        prev_message_id = message.reply_to_message.message_id if message.reply_to_message else None
-
-        # Удаляем предыдущее сообщение (если оно существует)
-        if prev_message_id:
+        # Удаляем предыдущий ответ на команду /card (если он существует)
+        if last_card_message_id:
             try:
-                await bot.delete_message(chat_id=chat_id, message_id=prev_message_id)
+                await bot.delete_message(chat_id=chat_id, message_id=last_card_message_id)
             except Exception as e:
-                logging.error(f"Ошибка при удалении предыдущего сообщения: {e}")
+                logging.error(f"Ошибка при удалении предыдущего ответа на команду /card: {e}")
                 traceback.print_exc()
 
-        await bot.send_photo(chat_id=chat_id, photo=image_output, caption=caption_text, reply_markup=keyboard, 
+        # Отправляем новый ответ на команду /card и сохраняем его message_id
+        sent_message = await bot.send_photo(chat_id=chat_id, photo=image_output, caption=caption_text, reply_markup=keyboard, 
                              parse_mode=types.ParseMode.HTML)
+        last_card_message_id = sent_message.message_id
     else:
         await message.reply(caption_text, reply_markup=keyboard, parse_mode=types.ParseMode.HTML)
 
