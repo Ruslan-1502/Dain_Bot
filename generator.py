@@ -19,6 +19,48 @@ from utils import (fade_asset_icon, fade_character_art, format_statistics,
                    open_image, scale_image)
 
 
+from PIL import Image, ImageChops,ImageFilter
+import os
+
+
+def openImageElementConstant(element, teampt = 1):
+    if teampt in [1,2]:
+        if element == "Fire":
+            return Image.open(f'assets/constant/PYRO.png')
+        elif element== "Grass":
+            return Image.open(f'assets/constant/DENDRO.png')
+        elif element == "Electric":
+            return Image.open(f'assets/constant/ELECTRO.png')
+        elif element == "Water":
+            return Image.open(f'assets/constant/GYDRO.png')
+        elif element == "Wind":
+            return Image.open(f'assets/constant/ANEMO.png')
+        elif element== "Rock":
+            return Image.open(f'assets/constant/GEO.png')
+        elif element == "Ice":
+            return Image.open(f'assets/constant/CRYO.png')
+        else:
+            return Image.open(f'assets/constant/ERROR.png')
+    else:
+        if element == "Fire":
+            return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_PYRO.png'),Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_PYRO.png')
+        elif element== "Grass":
+            return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_DENDRO.png'),Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_DENDRO.png')
+        elif element == "Electric":
+            return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_ELECTRO.png'), Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_ELECTRO.png')
+        elif element == "Water":
+            return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_GYDRO.png'),Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_GYDRO.png')
+        elif element == "Wind":
+            return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_ANEMO.png'), Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_ANEMO.png')
+        elif element== "Rock":
+            return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_GEO.png'), Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_GEO.png')
+        elif element == "Ice":
+            return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_CRYO.png'), Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_CRYO.png')
+        else:
+            return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_ERROR.png'), Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_ERROR.png')
+
+
+
 async def generate_image(
     data: EnkaNetworkResponse, character: CharacterInfo, locale: Language = Language.RU
 ):
@@ -143,6 +185,9 @@ async def generate_image(
     )
 
     """ Constellations Section """
+    element_image = openImageElementConstant(character.element)
+    element_image = scale_image(element_image, fixed_height=65)  # Apply the same size as constellation_icon
+
     c_overlay = open_image("attributes/Assets/enka_constellation_overlay.png")
     c_overlay = scale_image(c_overlay, fixed_height=75)
     ImageDraw.Draw(c_overlay).ellipse(
@@ -150,8 +195,9 @@ async def generate_image(
     )
     lock = open_image("attributes/UI/LOCKED.png", resize=(20, 25))
 
-
     constellation_starting_index = 160
+    vertical_offset = -11 
+    
     for index, constellation in enumerate(character.constellations):
         foreground.paste(
             c_overlay, (25, constellation_starting_index + 60 * index), c_overlay
@@ -166,10 +212,34 @@ async def generate_image(
             f = ImageEnhance.Brightness(constellation_icon)
             constellation_icon = f.enhance(0.4)
             constellation_icon.paste(lock, (13, 8), lock)
+            foreground.paste(
+                constellation_icon,
+                (
+                    int(63 - (constellation_icon.size[0] / 2)),
+                    constellation_starting_index + 15 + 60 * index,
+                ),
+                constellation_icon,
+            )
+            # Paste element_image as the background
+            foreground.paste(
+                element_image,
+                (
+                    int(63 - (element_image.size[0] / 2)),
+                    constellation_starting_index + 15 + 60 * index + vertical_offset ,
+                ),
+                element_image,
+            )
         else:
-            f = ImageEnhance.Brightness(constellation_icon)
-            constellation_icon = f.enhance(2.0)
             for _ in range(2):
+                                # Paste element_image as the background
+                foreground.paste(
+                    element_image,
+                    (
+                        int(63 - (element_image.size[0] / 2)),
+                        constellation_starting_index + 15 + 60 * index + vertical_offset,
+                    ),
+                    element_image,
+                )
                 foreground.paste(
                     constellation_icon,
                     (
@@ -178,15 +248,7 @@ async def generate_image(
                     ),
                     constellation_icon,
                 )
-        
-        foreground.paste(
-            constellation_icon,
-            (
-                int(63 - (constellation_icon.size[0] / 2)),
-                constellation_starting_index + 15 + 60 * index,
-            ),
-            constellation_icon,
-        )
+
 
     """ Talents Section """
     talent_overlay = open_image(f"attributes/Assets/enka_talent_overlay.png")
