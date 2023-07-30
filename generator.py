@@ -150,6 +150,7 @@ async def generate_image(
     )
     lock = open_image("attributes/UI/LOCKED.png", resize=(20, 25))
 
+
     constellation_starting_index = 160
     for index, constellation in enumerate(character.constellations):
         foreground.paste(
