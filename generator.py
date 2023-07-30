@@ -163,7 +163,7 @@ async def generate_image(
 
         if index >= character.constellations_unlocked:
             f = ImageEnhance.Brightness(constellation_icon)
-            constellation_icon = f.enhance(1.0)
+            constellation_icon = f.enhance(0.4)
             constellation_icon.paste(lock, (13, 8), lock)
         else:
             for _ in range(2):
