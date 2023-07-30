@@ -166,6 +166,7 @@ async def generate_image(
             constellation_icon = f.enhance(0.4)
             constellation_icon.paste(lock, (13, 8), lock)
         else:
+            constellation_icon = f.enhance(1.5)
             for _ in range(2):
                 foreground.paste(
                     constellation_icon,
@@ -175,7 +176,7 @@ async def generate_image(
                     ),
                     constellation_icon,
                 )
-
+        
         foreground.paste(
             constellation_icon,
             (
