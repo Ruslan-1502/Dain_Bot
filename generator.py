@@ -211,6 +211,17 @@ async def generate_image(
         if index >= character.constellations_unlocked:
             f = ImageEnhance.Brightness(constellation_icon)
             constellation_icon = f.enhance(0.4)
+            
+            # Paste element_image as the background
+            # foreground.paste(
+            #     element_image,
+            #     (
+            #         int(63 - (element_image.size[0] / 2)),
+            #         constellation_starting_index + 15 + 60 * index + vertical_offset ,
+            #     ),
+            #     element_image,
+            # )
+
             constellation_icon.paste(lock, (13, 8), lock)
             foreground.paste(
                 constellation_icon,
@@ -220,18 +231,9 @@ async def generate_image(
                 ),
                 constellation_icon,
             )
-            # Paste element_image as the background
-            foreground.paste(
-                element_image,
-                (
-                    int(63 - (element_image.size[0] / 2)),
-                    constellation_starting_index + 15 + 60 * index + vertical_offset ,
-                ),
-                element_image,
-            )
         else:
             for _ in range(2):
-                                # Paste element_image as the background
+                # Paste element_image as the background
                 foreground.paste(
                     element_image,
                     (
@@ -248,6 +250,7 @@ async def generate_image(
                     ),
                     constellation_icon,
                 )
+
 
 
     """ Talents Section """
