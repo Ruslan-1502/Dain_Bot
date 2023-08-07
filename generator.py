@@ -823,7 +823,7 @@ async def generate_image(
     
         # Увеличение контраста
     enhancer = ImageEnhance.Contrast(composite_image)
-    composite_image_enhanced = enhancer.enhance(1.2)  # Пример: увеличение контраста на 20%
+    composite_image_enhanced = enhancer.enhance(1.1)  # Пример: увеличение контраста на 20%
     
         # Увеличение яркости
     enhancer = ImageEnhance.Brightness(composite_image_enhanced)
