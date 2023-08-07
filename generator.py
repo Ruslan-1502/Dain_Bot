@@ -23,42 +23,41 @@ from PIL import Image, ImageChops,ImageFilter
 import os
 
 
-def openImageElementConstant(element, teampt = 1):
-    if teampt in [1,2]:
+def openImageElementConstant(element):
+    # if teampt in [1,2]:
+    #     if element == "Fire":
+    #         return Image.open(f'assets/constant/PYRO.png')
+    #     elif element== "Grass":
+    #         return Image.open(f'assets/constant/DENDRO.png')
+    #     elif element == "Electric":
+    #         return Image.open(f'assets/constant/ELECTRO.png')
+    #     elif element == "Water":
+    #         return Image.open(f'assets/constant/GYDRO.png')
+    #     elif element == "Wind":
+    #         return Image.open(f'assets/constant/ANEMO.png')
+    #     elif element== "Rock":
+    #         return Image.open(f'assets/constant/GEO.png')
+    #     elif element == "Ice":
+    #         return Image.open(f'assets/constant/CRYO.png')
+    #     else:
+    #         return Image.open(f'assets/constant/ERROR.png')
+    # else:
         if element == "Fire":
-            return Image.open(f'assets/constant/PYRO.png')
+            return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_PYRO.png')
         elif element== "Grass":
-            return Image.open(f'assets/constant/DENDRO.png')
+            return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_DENDRO.png')
         elif element == "Electric":
-            return Image.open(f'assets/constant/ELECTRO.png')
+            return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_ELECTRO.png')
         elif element == "Water":
-            return Image.open(f'assets/constant/GYDRO.png')
+            return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_GYDRO.png')
         elif element == "Wind":
-            return Image.open(f'assets/constant/ANEMO.png')
+            return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_ANEMO.png')
         elif element== "Rock":
-            return Image.open(f'assets/constant/GEO.png')
+            return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_GEO.png')
         elif element == "Ice":
-            return Image.open(f'assets/constant/CRYO.png')
+            return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_CRYO.png')
         else:
-            return Image.open(f'assets/constant/ERROR.png')
-    else:
-        if element == "Fire":
-            return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_PYRO.png'),Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_PYRO.png')
-        elif element== "Grass":
-            return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_DENDRO.png'),Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_DENDRO.png')
-        elif element == "Electric":
-            return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_ELECTRO.png'), Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_ELECTRO.png')
-        elif element == "Water":
-            return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_GYDRO.png'),Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_GYDRO.png')
-        elif element == "Wind":
-            return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_ANEMO.png'), Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_ANEMO.png')
-        elif element== "Rock":
-            return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_GEO.png'), Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_GEO.png')
-        elif element == "Ice":
-            return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_CRYO.png'), Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_CRYO.png')
-        else:
-            return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_ERROR.png'), Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_ERROR.png')
-
+            return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_ERROR.png')
 
 def closed_const (element):
     if element == "Fire":
