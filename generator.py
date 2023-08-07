@@ -252,8 +252,6 @@ async def generate_image(
                 constellation_icon,
             )
         else:
-            f = ImageEnhance.Brightness(constellation_icon)
-            constellation_icon = f.enhance(1.5)
             for _ in range(2):
                 # Paste element_image as the background
                 foreground.paste(
