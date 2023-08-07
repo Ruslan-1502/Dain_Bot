@@ -60,6 +60,24 @@ def openImageElementConstant(element, teampt = 1):
             return Image.open(f'assets/teapmleTree/constant/open/OPEN_CONST_ERROR.png'), Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_ERROR.png')
 
 
+def closed_const (element):
+    if element == "Fire":
+        return Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_PYRO.png')
+    elif element== "Grass":
+        return Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_DENDRO.png')
+    elif element == "Electric":
+        return Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_ELECTRO.png')
+    elif element == "Water":
+        return Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_GYDRO.png')
+    elif element == "Wind":
+        return Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_ANEMO.png')
+    elif element== "Rock":
+        return Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_GEO.png')
+    elif element == "Ice":
+        return Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_CRYO.png')
+    else:
+        return Image.open(f'assets/teapmleTree/constant/closed/CLOSE_CONST_ERROR.png')
+
 
 async def generate_image(
     data: EnkaNetworkResponse, character: CharacterInfo, locale: Language = Language.RU
@@ -188,6 +206,9 @@ async def generate_image(
     element_image = openImageElementConstant(character.element)
     element_image = scale_image(element_image, fixed_height=65)  # Apply the same size as constellation_icon
 
+    element_closed = closed_const(character.element)
+    element_closed = scale_image(element_closed, fixed_height=65)
+
     c_overlay = open_image("attributes/Assets/enka_constellation_overlay.png")
     c_overlay = scale_image(c_overlay, fixed_height=75)
     ImageDraw.Draw(c_overlay).ellipse(
@@ -196,8 +217,8 @@ async def generate_image(
     lock = open_image("attributes/UI/LOCKED.png", resize=(20, 25))
 
     constellation_starting_index = 160
-    vertical_offset = -11 
-    
+    vertical_offset = -11
+
     for index, constellation in enumerate(character.constellations):
         foreground.paste(
             c_overlay, (25, constellation_starting_index + 60 * index), c_overlay
@@ -211,16 +232,16 @@ async def generate_image(
         if index >= character.constellations_unlocked:
             f = ImageEnhance.Brightness(constellation_icon)
             constellation_icon = f.enhance(0.4)
-            
+
             # Paste element_image as the background
-            # foreground.paste(
-            #     element_image,
-            #     (
-            #         int(63 - (element_image.size[0] / 2)),
-            #         constellation_starting_index + 15 + 60 * index + vertical_offset ,
-            #     ),
-            #     element_image,
-            # )
+            foreground.paste(
+                element_closed,
+                (
+                    int(63 - (element_closed.size[0] / 2)),
+                    constellation_starting_index + 15 + 60 * index + vertical_offset ,
+                ),
+                element_closed,
+            )
 
             constellation_icon.paste(lock, (13, 8), lock)
             foreground.paste(
