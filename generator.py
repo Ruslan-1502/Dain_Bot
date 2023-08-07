@@ -784,23 +784,23 @@ async def generate_image(
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     filename = f"{character.name}_{timestamp}"
 
-    composite_image_1 = Image.alpha_composite(background, foreground)
-    composite_image = Image.alpha_composite(composite_image_1, textground)
+    # composite_image_1 = Image.alpha_composite(background, foreground)
+    # composite_image = Image.alpha_composite(composite_image_1, textground)
     
-        # Увеличение контраста
-    enhancer = ImageEnhance.Contrast(composite_image)
-    composite_image_enhanced = enhancer.enhance(1.2)  # Пример: увеличение контраста на 20%
+    #     # Увеличение контраста
+    # enhancer = ImageEnhance.Contrast(composite_image)
+    # composite_image_enhanced = enhancer.enhance(1.2)  # Пример: увеличение контраста на 20%
     
-        # Увеличение яркости
-    enhancer = ImageEnhance.Brightness(composite_image_enhanced)
-    composite_image_enhanced = enhancer.enhance(1.1)  # Пример: увеличение яркости на 10%
+    #     # Увеличение яркости
+    # enhancer = ImageEnhance.Brightness(composite_image_enhanced)
+    # composite_image_enhanced = enhancer.enhance(1.1)  # Пример: увеличение яркости на 10%
     
-        # Увеличение насыщенности
-    enhancer = ImageEnhance.Color(composite_image_enhanced)
-    composite_image_enhanced = enhancer.enhance(1.1)  # Пример: увеличение насыщенности на 10%
+    #     # Увеличение насыщенности
+    # enhancer = ImageEnhance.Color(composite_image_enhanced)
+    # composite_image_enhanced = enhancer.enhance(1.1)  # Пример: увеличение насыщенности на 10%
 
-    # Сохраняем улучшенное изображение
-    composite_image_enhanced.save(f"output/{filename}.png", format="png")
+    # # Сохраняем улучшенное изображение
+    # composite_image_enhanced.save(f"output/{filename}.png", format="png")
 
     """ 
     If you're using an async environment, might be worth mentioning
@@ -819,15 +819,16 @@ async def generate_image(
     # Если вы хотите вернуть изображение в формате BytesIO:
     output = io.BytesIO()  # Создаем объект BytesIO
     
+    composite_image_1 = Image.alpha_composite(background, foreground)
     composite_image = Image.alpha_composite(composite_image_1, textground)
     
         # Увеличение контраста
     enhancer = ImageEnhance.Contrast(composite_image)
     composite_image_enhanced = enhancer.enhance(1.2)  # Пример: увеличение контраста на 20%
     
-        # Увеличение яркости
-    enhancer = ImageEnhance.Brightness(composite_image_enhanced)
-    composite_image_enhanced = enhancer.enhance(1)  # Пример: увеличение яркости на 10%
+    #     # Увеличение яркости
+    # enhancer = ImageEnhance.Brightness(composite_image_enhanced)
+    # composite_image_enhanced = enhancer.enhance(1)  # Пример: увеличение яркости на 10%
     
         # Увеличение насыщенности
     enhancer = ImageEnhance.Color(composite_image_enhanced)
