@@ -1,7 +1,7 @@
 import os
 
 BOT_TOKEN = '5929211650:AAHC5PDld7ESFqwe9IcX4ccGir0eVDHgfPM' #akasha
-WEBHOOK_URL = f'https://dain2.herokuapp.com/webhook/5929211650:AAHC5PDld7ESFqwe9IcX4ccGir0eVDHgfPM'
+WEBHOOK_URL = f'https://dain2-74f27759ebf5.herokuapp.com/webhook/5929211650:AAHC5PDld7ESFqwe9IcX4ccGir0eVDHgfPM'
 WEBAPP_HOST = '0.0.0.0'
 WEBAPP_PORT = os.environ.get('PORT')
 WEBHOOK_PATH = '/webhook/5929211650:AAHC5PDld7ESFqwe9IcX4ccGir0eVDHgfPM'
