@@ -10,3 +10,6 @@ host = 'kilichev.mysql.pythonanywhere-services.com'
 user = 'kilichev'
 password = '@@@7akasha'
 database = 'kilichev$users'
+
+
+
