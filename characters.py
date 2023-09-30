@@ -177,7 +177,20 @@ characters = {
     'leney' : 151,
     'liney': 151,
     'лини' : 151,
-    'линни': 151
-    }
+    'линни': 151,
+    'neuvillette': 155,
+    'neuvillett' :155,
+    'neuvillet' : 155,
+    'neuvilet' :155,
+    'nevillet' : 155,
+    'nyovillet' :155,
+    'nuovillet' : 155,
+    'невиллет' : 155,
+    'нёвиллет' : 155,
+    'freminet' : 154,
+    'fremine' : 154,
+    'фреминет': 154,
+    'фремине': 154,
+   }
 
     
