@@ -141,50 +141,58 @@ async def uid_command(message: types.Message):
         await message.answer("Неправильный формат команды. Попробуйте еще раз.")
         return
 
-    cursor.execute("SELECT * FROM users")
-    all_users_data = cursor.fetchall()
+    # Получение всех chat_id из вашей базы данных
+    cursor.execute("SELECT chat_id FROM users")
+    users_in_db = cursor.fetchall()
 
-    users_data_in_group = []
-    for user_data in all_users_data:
-        user_chat_id = user_data[0]
+    users_in_group = []
+    for user_chat_id_tuple in users_in_db:
+        user_chat_id = user_chat_id_tuple[0]
         try:
             member = await bot.get_chat_member(chat_id=current_chat_id, user_id=user_chat_id)
             if member.status in ['member', 'administrator', 'creator']:
-                users_data_in_group.append(user_data)
+                users_in_group.append(user_chat_id)
         except Exception as e:
+            # Пользователь не найден в группе или другая ошибка
             pass
-
-    users_data_in_group.sort(key=lambda x: (-x[3], x[2]))
-
+            
+    # Теперь у вас есть список users_in_group с пользователями, которые есть в группе
     output = ""
     keyboard = InlineKeyboardMarkup()
-
-    for user_data in users_data_in_group:
-        user_chat_id = user_data[0]
-        ar, uid, nickname, username = user_data[3], user_data[2], user_data[4], user_data[1]
-
-        if len(args) == 1:
+    
+    
+    for user_chat_id in users_in_group:
+        if len(args) == 0:
+            cursor.execute("SELECT * FROM users WHERE chat_id=?", (user_chat_id,))
+            cursor.execute("SELECT * FROM users ORDER BY ar DESC, uid ASC")
+        else:
             query = args[0]
-            if query.startswith("@") and username == query[1:]:
+            if query.startswith("@"):
+                username = query[1:]
+                cursor.execute("SELECT * FROM users WHERE username=? AND chat_id=?", (username, user_chat_id))
                 show_details = True
-            elif query in ["asia", "euro", "america", "sar"] and user_data[5] == query:
-                show_details = True
+            elif query in ["asia", "euro", "america", "sar"]:
+                region = query
+                cursor.execute("SELECT * FROM users WHERE region=? AND chat_id=?", (region, user_chat_id))
+                cursor.execute("SELECT * FROM users WHERE region=? ORDER BY ar DESC, uid ASC", (region,))
             else:
-                cursor.execute("SELECT * FROM users WHERE first_name=? AND chat_id=?", (query, user_chat_id))
-                if cursor.fetchone():
-                    show_details = True
+                first_name = query
+                cursor.execute("SELECT * FROM users WHERE first_name=? AND chat_id=?", (first_name, user_chat_id))
+                show_details = True
 
-        nickname = nickname.replace("#", "")
-        output += f"AR: {ar} UID: <code>{uid}</code> Nick: {nickname}\n"
-        if show_details:
-            output += f"Чтобы посмотреть персонажей <code>/card {uid}</code> "
+        user_data = cursor.fetchone()
+        if user_data:
+            ar, uid, nickname, username = user_data[3], user_data[2], user_data[4], user_data[1]
+            nickname = nickname.replace("#", "")
+            output += f"AR: {ar} UID: <code>{uid}</code> Nick: {nickname}\n"
+            if show_details:
+                output += f"Чтобы посмотреть персонажей <code>/card {uid}</code> "
 
     if output:
         keyboard.add(InlineKeyboardButton(f"Добавить свой UID", url=f"https://t.me/akashauz_bot"))
         await message.answer(output, reply_markup=keyboard, parse_mode=types.ParseMode.HTML)
     else:
         await message.answer("В этой группе нет пользователей из базы данных.")
-
 
 
 
