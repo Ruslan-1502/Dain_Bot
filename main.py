@@ -130,10 +130,11 @@ async def start_command(message: types.Message):
 async def uid_command(message: types.Message):
     current_chat_id = message.chat.id
 
-
+    if current_chat_id not in GROUP_ID:
+        await message.answer("Эта команда может быть выполнена только в определенных группах.")
+        return
 
     args = message.get_args().split()
-    show_details = False
 
     if len(args) > 1:
         await message.answer("Неправильный формат команды. Попробуйте еще раз.")
@@ -142,10 +143,14 @@ async def uid_command(message: types.Message):
     cursor.execute("SELECT * FROM users")
     all_users_data = cursor.fetchall()
 
+    if not all_users_data:
+        await message.answer("Таблица users пуста.")
+        return
+
     users_data_group = []
 
     for user_data in all_users_data:
-        chat_id = user_data[0]  # это предположение, в зависимости от структуры вашей БД
+        chat_id = user_data[0]
         try:
             member = await bot.get_chat_member(chat_id=current_chat_id, user_id=chat_id)
             if member.status in ['member', 'administrator', 'creator']:
@@ -153,8 +158,11 @@ async def uid_command(message: types.Message):
         except Exception:
             pass
 
-    # Сортировка списка по ar и uid
-    users_data_group.sort(key=lambda x: (-x[3], x[2]))  # предполагая что x[3] это ar и x[2] это uid
+    if not users_data_group:
+        await message.answer("Ни один пользователь из базы данных не найден в этой группе.")
+        return
+
+    users_data_group.sort(key=lambda x: (-x[3], x[2]))
 
     output = ""
     keyboard = InlineKeyboardMarkup()
@@ -162,8 +170,6 @@ async def uid_command(message: types.Message):
         ar, uid, nickname, username = user_data[3], user_data[2], user_data[4], user_data[1]
         nickname = nickname.replace("#", "")
         output += f"AR: {ar} UID: <code>{uid}</code> Nick: {nickname}\n"
-        if show_details:
-            output += f"Чтобы посмотреть персонажей <code>/card {uid}</code> "
 
     if output:
         keyboard.add(InlineKeyboardButton(f"Добавить свой UID", url=f"https://t.me/akashauz_bot"))
