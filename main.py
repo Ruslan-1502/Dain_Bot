@@ -151,7 +151,7 @@ async def uid_command(message: types.Message):
         try:
             member = await bot.get_chat_member(chat_id=current_chat_id, user_id=user_chat_id)
             if member.status in ['member', 'administrator', 'creator']:
-                users_in_group.append(user_chat_id)
+                users_in_group.append(user_data)
         except Exception as e:
             # Пользователь не найден в группе или другая ошибка
             pass
