@@ -157,7 +157,8 @@ async def uid_command(message: types.Message):
         user_data = cursor.fetchall()
         all_users.extend(user_data)
     
-    all_users.sort(key=lambda x: (-x[3], -x[2]))  # x[3] is ar and x[2] is uid
+    all_users.sort(key=lambda x: (-x[3], x[2]))  # x[3] is ar and x[2] is uid
+
 
     output = ""
     keyboard = InlineKeyboardMarkup()
