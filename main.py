@@ -130,9 +130,7 @@ async def start_command(message: types.Message):
 async def uid_command(message: types.Message):
     current_chat_id = message.chat.id
 
-    if current_chat_id not in GROUP_ID:
-        await message.answer("Эта команда может быть выполнена только в определенных группах.")
-        return
+
 
     args = message.get_args().split()
     show_details = False
@@ -172,8 +170,6 @@ async def uid_command(message: types.Message):
         await message.answer(output, reply_markup=keyboard, parse_mode=types.ParseMode.HTML)
     else:
         await message.answer("В этой группе нет пользователей из базы данных.")
-
-
 
 
 #`{uid}`
