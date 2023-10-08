@@ -245,8 +245,8 @@ async def send_character_guide(message: types.Message):
 
 
 
-@dp.message_handler(commands=['db'])
-async def update_handler(message: types.Message):
+# Основная функция, которая отправляет базу данных
+async def send_db(message: types.Message):
     try:
         with open('users.db', 'rb') as db_file:
             await bot.send_document(CHAT_ID, db_file)
@@ -254,6 +254,11 @@ async def update_handler(message: types.Message):
     except Exception as e:
         await message.reply(f'Произошла ошибка при отправке базы данных: {str(e)}')
 
+# Обработчик команды /db
+@dp.message_handler(commands=['db'])
+async def db_command_handler(message: types.Message):
+    await send_db(message)
+    
 # Обработчик команды /saytlar
 from aiogram import Bot, Dispatcher, types
 @dp.message_handler(commands=['saytlar'])
@@ -430,6 +435,7 @@ async def process_input_handler(message: types.Message):
     success = await add_uid(uid, chat_id, username, first_name)
     if success:
         await message.reply("UID успешно добавлен!")
+        await send_db(message)
     else:
         await message.reply("UID не существует или уже добавлен в базу данных.")
 
