@@ -158,37 +158,29 @@ async def uid_command(message: types.Message):
     # Теперь у вас есть список users_in_group с пользователями, которые есть в группе
     output = ""
     keyboard = InlineKeyboardMarkup()
-    for user_chat_id in users_in_group:
-        if len(args) == 0:
-            cursor.execute("SELECT * FROM users WHERE chat_id=?", (user_chat_id,))
-        else:
-            query = args[0]
-            if query.startswith("@"):
-                username = query[1:]
-                cursor.execute("SELECT * FROM users WHERE username=? AND chat_id=?", (username, user_chat_id))
-                show_details = True
-            elif query in ["asia", "euro", "america", "sar"]:
-                region = query
-                cursor.execute("SELECT * FROM users WHERE region=? AND chat_id=?", (region, user_chat_id))
-            else:
-                first_name = query
-                cursor.execute("SELECT * FROM users WHERE first_name=? AND chat_id=?", (first_name, user_chat_id))
-                show_details = True
 
-        user_data = cursor.fetchone()
-        if user_data:
-            ar, uid, nickname, username = user_data[3], user_data[2], user_data[4], user_data[1]
-            nickname = nickname.replace("#", "")
-            output += f"AR: {ar} UID: <code>{uid}</code> Nick: {nickname}\n"
-            if show_details:
-                output += f"Чтобы посмотреть персонажей <code>/card {uid}</code> "
+    # Теперь у вас есть список users_in_group с пользователями, которые есть в группе
+    for user_data in users_in_group:
+        ar, uid, nickname, username = user_data[3], user_data[2], user_data[4], user_data[1]
+        if len(args) == 1:
+            query = args[0]
+            if query.startswith("@") and username != query[1:]:
+                continue
+            elif query in ["asia", "euro", "america", "sar"] and user_data[5] != query:  # предположим, что user_data[5] это region
+                continue
+            elif user_data[6] != query:  # предположим, что user_data[6] это first_name
+                continue
+
+        nickname = nickname.replace("#", "")
+        output += f"AR: {ar} UID: <code>{uid}</code> Nick: {nickname}\n"
+        if show_details:
+            output += f"Чтобы посмотреть персонажей <code>/card {uid}</code> "
 
     if output:
         keyboard.add(InlineKeyboardButton(f"Добавить свой UID", url=f"https://t.me/akashauz_bot"))
         await message.answer(output, reply_markup=keyboard, parse_mode=types.ParseMode.HTML)
     else:
         await message.answer("В этой группе нет пользователей из базы данных.")
-
 
 
 
