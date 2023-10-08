@@ -130,54 +130,65 @@ async def start_command(message: types.Message):
 async def uid_command(message: types.Message):
     current_chat_id = message.chat.id
 
-    
+    if current_chat_id not in GROUP_ID:
+        await message.answer("Эта команда может быть выполнена только в определенных группах.")
+        return
 
     args = message.get_args().split()
     show_details = False
 
-    if len(args) == 0:
-        cursor.execute("SELECT * FROM users WHERE chat_id=? ORDER BY ar DESC, uid ASC", (current_chat_id,))
-    elif len(args) == 1:
-        query = args[0]
-        if query.startswith("@"):
-            username = query[1:]
-            cursor.execute("SELECT * FROM users WHERE username=? AND chat_id=?", (username, current_chat_id))
-            show_details = True
-        elif query in ["asia", "euro", "america", "sar"]:
-            region = query
-            cursor.execute("SELECT * FROM users WHERE region=? AND chat_id=? ORDER BY ar DESC, uid ASC", (region, current_chat_id))
-        else:
-            first_name = query
-            cursor.execute("SELECT * FROM users WHERE first_name=? AND chat_id=?", (first_name, current_chat_id))
-            show_details = True
-    else:
+    if len(args) > 1:
         await message.answer("Неправильный формат команды. Попробуйте еще раз.")
         return
 
-    result = cursor.fetchall()
-    if len(result) == 0:
-        await message.answer("Не найдено пользователей.")
-        return
+    # Получение всех chat_id из вашей базы данных
+    cursor.execute("SELECT chat_id FROM users")
+    users_in_db = cursor.fetchall()
 
+    users_in_group = []
+    for user_chat_id_tuple in users_in_db:
+        user_chat_id = user_chat_id_tuple[0]
+        try:
+            member = await bot.get_chat_member(chat_id=current_chat_id, user_id=user_chat_id)
+            if member.status in ['member', 'administrator', 'creator']:
+                users_in_group.append(user_chat_id)
+        except Exception as e:
+            # Пользователь не найден в группе или другая ошибка
+            pass
+
+    # Теперь у вас есть список users_in_group с пользователями, которые есть в группе
     output = ""
-    if message.chat.type in ["group", "supergroup"]:
-        keyboard = InlineKeyboardMarkup()
-        for row in result:
-            ar, uid, nickname, username = row[3], row[2], row[4], row[1]
+    for user_chat_id in users_in_group:
+        if len(args) == 0:
+            cursor.execute("SELECT * FROM users WHERE chat_id=?", (user_chat_id,))
+        else:
+            query = args[0]
+            if query.startswith("@"):
+                username = query[1:]
+                cursor.execute("SELECT * FROM users WHERE username=? AND chat_id=?", (username, user_chat_id))
+                show_details = True
+            elif query in ["asia", "euro", "america", "sar"]:
+                region = query
+                cursor.execute("SELECT * FROM users WHERE region=? AND chat_id=?", (region, user_chat_id))
+            else:
+                first_name = query
+                cursor.execute("SELECT * FROM users WHERE first_name=? AND chat_id=?", (first_name, user_chat_id))
+                show_details = True
+
+        user_data = cursor.fetchone()
+        if user_data:
+            ar, uid, nickname, username = user_data[3], user_data[2], user_data[4], user_data[1]
             nickname = nickname.replace("#", "")
             output += f"AR: {ar} UID: <code>{uid}</code> Nick: {nickname}\n"
             if show_details:
                 output += f"Чтобы посмотреть персонажей <code>/card {uid}</code> "
-        keyboard.add(InlineKeyboardButton(f"Добавить свой UID", url=f"https://t.me/akashauz_bot"))
-        await message.answer(output, reply_markup=keyboard, parse_mode=types.ParseMode.HTML)
-    else:
-        for row in result:
-            ar, uid, nickname, chat_id = row[3], row[2], row[4], row[6]
-            nickname = nickname.replace("#", "")
-            output += f"AR: {ar} UID: <code>{uid}</code> Nick: <a href='tg://user?id={chat_id}'>{nickname}</a>\n"
-            if show_details:
-                output += f"Чтобы посмотреть персонажей <code>/card {uid}</code> "
+
+    if output:
         await message.answer(output, parse_mode=types.ParseMode.HTML)
+    else:
+        await message.answer("В этой группе нет пользователей из базы данных.")
+
+
 
 
 #`{uid}`
