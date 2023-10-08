@@ -164,7 +164,6 @@ async def uid_command(message: types.Message):
     for user_chat_id in users_in_group:
         if len(args) == 0:
             cursor.execute("SELECT * FROM users WHERE chat_id=?", (user_chat_id,))
-            cursor.execute("SELECT * FROM users ORDER BY ar DESC, uid ASC")
         else:
             query = args[0]
             if query.startswith("@"):
@@ -174,7 +173,6 @@ async def uid_command(message: types.Message):
             elif query in ["asia", "euro", "america", "sar"]:
                 region = query
                 cursor.execute("SELECT * FROM users WHERE region=? AND chat_id=?", (region, user_chat_id))
-                cursor.execute("SELECT * FROM users WHERE region=? ORDER BY ar DESC, uid ASC", (region,))
             else:
                 first_name = query
                 cursor.execute("SELECT * FROM users WHERE first_name=? AND chat_id=?", (first_name, user_chat_id))
