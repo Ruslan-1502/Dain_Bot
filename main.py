@@ -128,6 +128,13 @@ async def start_command(message: types.Message):
 
 
 async def uid_command(message: types.Message):
+    if message.chat.type not in [types.ChatType.PRIVATE]:
+        member = await bot.get_chat_member(chat_id=message.chat.id, user_id=bot.id)
+        if member.status != "administrator" or not member.can_delete_messages:
+            await message.answer("Пожалуйста, дайте мне права администратора для удаления сообщений.")
+            return
+
+        await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
     current_chat_id = message.chat.id
     args = message.get_args().split()
     show_details = False
