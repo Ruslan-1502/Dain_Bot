@@ -155,9 +155,11 @@ async def uid_command(message: types.Message):
         except Exception as e:
             # Пользователь не найден в группе или другая ошибка
             pass
-
+    users_in_group.sort(key=lambda x: (-x[3], x[2])) # предполагая что x[3] это ar и x[2] это uid
+        
     # Теперь у вас есть список users_in_group с пользователями, которые есть в группе
     output = ""
+    keyboard = InlineKeyboardMarkup()
     for user_chat_id in users_in_group:
         if len(args) == 0:
             cursor.execute("SELECT * FROM users WHERE chat_id=?", (user_chat_id,))
@@ -184,7 +186,8 @@ async def uid_command(message: types.Message):
                 output += f"Чтобы посмотреть персонажей <code>/card {uid}</code> "
 
     if output:
-        await message.answer(output, parse_mode=types.ParseMode.HTML)
+        keyboard.add(InlineKeyboardButton(f"Добавить свой UID", url=f"https://t.me/akashauz_bot"))
+        await message.answer(output, reply_markup=keyboard, parse_mode=types.ParseMode.HTML)
     else:
         await message.answer("В этой группе нет пользователей из базы данных.")
 
