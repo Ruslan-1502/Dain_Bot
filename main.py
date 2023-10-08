@@ -246,13 +246,13 @@ async def send_character_guide(message: types.Message):
 
 
 # Основная функция, которая отправляет базу данных
-async def send_db(message: types.Message):
+async def send_db():
     try:
         with open('users.db', 'rb') as db_file:
             await bot.send_document(CHAT_ID, db_file)
-        await message.reply('База данных успешно отправлена!')
+        await bot.send_message(CHAT_ID, 'База данных успешно отправлена!')
     except Exception as e:
-        await message.reply(f'Произошла ошибка при отправке базы данных: {str(e)}')
+        await bot.send_message(CHAT_ID, f'Произошла ошибка при отправке базы данных: {str(e)}')
 
 # Обработчик команды /db
 @dp.message_handler(commands=['db'])
