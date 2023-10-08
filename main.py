@@ -128,39 +128,29 @@ async def start_command(message: types.Message):
 
 
 async def uid_command(message: types.Message):
-    # Check if the message is in a group chat
-    if message.chat.type in ["group", "supergroup"]:
-        # Получаем информацию о членстве бота в группе
-        member = await bot.get_chat_member(chat_id=message.chat.id, user_id=bot.id)
-        # Если бот не является администратором или не может удалять сообщения
-        if member.status != "administrator" or not member.can_delete_messages:
-            # Бот просит пользователя предоставить ему права администратора
-            await message.answer("Пожалуйста, дайте мне права администратора для удаления сообщений.")
-            return
-        # Если бот является администратором и может удалять сообщения, удаляем сообщение пользователя
-        try:
-            if message.text == '/uid' or message.text == '/uid@akashauz_bot':
-                await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
-        except aiogram.utils.exceptions.MessageToDeleteNotFound:
-            await message.answer("Сообщение, которое вы пытаетесь удалить, уже было удалено или не найдено.")
+    current_chat_id = message.chat.id
+
+    if current_chat_id not in GROUP_ID:
+        await message.answer("Эта команда может быть выполнена только в определенных группах.")
+        return
 
     args = message.get_args().split()
     show_details = False
 
     if len(args) == 0:
-        cursor.execute("SELECT * FROM users ORDER BY ar DESC, uid ASC")
+        cursor.execute("SELECT * FROM users WHERE chat_id=? ORDER BY ar DESC, uid ASC", (current_chat_id,))
     elif len(args) == 1:
         query = args[0]
         if query.startswith("@"):
             username = query[1:]
-            cursor.execute("SELECT * FROM users WHERE username=?", (username,))
+            cursor.execute("SELECT * FROM users WHERE username=? AND chat_id=?", (username, current_chat_id))
             show_details = True
-        elif query in ["asia", "euro", "america", "sar"]: # Or whatever your valid regions are
+        elif query in ["asia", "euro", "america", "sar"]:
             region = query
-            cursor.execute("SELECT * FROM users WHERE region=? ORDER BY ar DESC, uid ASC", (region,))
+            cursor.execute("SELECT * FROM users WHERE region=? AND chat_id=? ORDER BY ar DESC, uid ASC", (region, current_chat_id))
         else:
             first_name = query
-            cursor.execute("SELECT * FROM users WHERE first_name=?", (first_name,))
+            cursor.execute("SELECT * FROM users WHERE first_name=? AND chat_id=?", (first_name, current_chat_id))
             show_details = True
     else:
         await message.answer("Неправильный формат команды. Попробуйте еще раз.")
@@ -176,17 +166,16 @@ async def uid_command(message: types.Message):
         keyboard = InlineKeyboardMarkup()
         for row in result:
             ar, uid, nickname, username = row[3], row[2], row[4], row[1]
-            nickname = nickname.replace("#", "")  # Удаление символа "#"
+            nickname = nickname.replace("#", "")
             output += f"AR: {ar} UID: <code>{uid}</code> Nick: {nickname}\n"
             if show_details:
                 output += f"Чтобы посмотреть персонажей <code>/card {uid}</code> "
         keyboard.add(InlineKeyboardButton(f"Добавить свой UID", url=f"https://t.me/akashauz_bot"))
         await message.answer(output, reply_markup=keyboard, parse_mode=types.ParseMode.HTML)
     else:
-        photo = None  # Initialize the variable with a default value
         for row in result:
             ar, uid, nickname, chat_id = row[3], row[2], row[4], row[6]
-            nickname = nickname.replace("#", "")  # Удаление символа "#"
+            nickname = nickname.replace("#", "")
             output += f"AR: {ar} UID: <code>{uid}</code> Nick: <a href='tg://user?id={chat_id}'>{nickname}</a>\n"
             if show_details:
                 output += f"Чтобы посмотреть персонажей <code>/card {uid}</code> "
