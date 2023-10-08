@@ -138,20 +138,21 @@ async def uid_command(message: types.Message):
         await message.answer("Неправильный формат команды. Попробуйте еще раз.")
         return
 
-    # Получение всех chat_id из вашей базы данных
-    cursor.execute("SELECT chat_id FROM users")
-    users_in_db = cursor.fetchall()
+        # Получение всех данных пользователей из базы данных
+    cursor.execute("SELECT * FROM users")
+    users_data_db = cursor.fetchall()
 
     users_in_group = []
-    for user_chat_id_tuple in users_in_db:
-        user_chat_id = user_chat_id_tuple[0]
+    for user_data in users_data_db:
+        user_chat_id = user_data[0] # это предположение, может быть user_data[1] или другое в зависимости от структуры
         try:
             member = await bot.get_chat_member(chat_id=current_chat_id, user_id=user_chat_id)
             if member.status in ['member', 'administrator', 'creator']:
-                users_in_group.append(user_chat_id)
+                users_in_group.append(user_data)
         except Exception as e:
-            # Пользователь не найден в группе или другая ошибка
             pass
+
+    # Сортировка пользователей на основе ar и uid
     users_in_group.sort(key=lambda x: (-x[3], x[2])) # предполагая что x[3] это ar и x[2] это uid
         
     # Теперь у вас есть список users_in_group с пользователями, которые есть в группе
