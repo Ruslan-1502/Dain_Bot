@@ -432,6 +432,7 @@ async def process_input_handler(message: types.Message):
         await message.reply("UID не существует или уже добавлен в базу данных.")
 
 
+
 async def update_users_info(users, message):
     total_users = len(users)
     batch_size = 10
