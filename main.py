@@ -142,46 +142,62 @@ async def uid_command(message: types.Message):
     if len(args) > 1:
         await message.answer("Неправильный формат команды. Попробуйте еще раз.")
         return
-
-    # Получение всех chat_id из вашей базы данных
-    cursor.execute("SELECT chat_id FROM users")
-    users_in_db = cursor.fetchall()
-
-    users_in_group = []
-    for user_chat_id_tuple in users_in_db:
-        user_chat_id = user_chat_id_tuple[0]
-        try:
-            member = await bot.get_chat_member(chat_id=current_chat_id, user_id=user_chat_id)
-            if member.status in ['member', 'administrator', 'creator']:
-                users_in_group.append(user_chat_id)
-        except Exception as e:
-            # Пользователь не найден в группе или другая ошибка
-            pass
     
-    all_users = []
-    for user_chat_id in users_in_group:
-        cursor.execute("SELECT * FROM users WHERE chat_id=?", (user_chat_id,))
-        user_data = cursor.fetchall()
-        all_users.extend(user_data)
-    
-    all_users.sort(key=lambda x: (-x[3], x[2]))  # x[3] is ar and x[2] is uid
+    if message.chat.type not in [types.ChatType.PRIVATE]:
+        # Получение всех chat_id из вашей базы данных
+        cursor.execute("SELECT chat_id FROM users")
+        users_in_db = cursor.fetchall()
+
+        users_in_group = []
+        for user_chat_id_tuple in users_in_db:
+            user_chat_id = user_chat_id_tuple[0]
+            try:
+                member = await bot.get_chat_member(chat_id=current_chat_id, user_id=user_chat_id)
+                if member.status in ['member', 'administrator', 'creator']:
+                    users_in_group.append(user_chat_id)
+            except Exception as e:
+                # Пользователь не найден в группе или другая ошибка
+                pass
+        
+        all_users = []
+        for user_chat_id in users_in_group:
+            cursor.execute("SELECT * FROM users WHERE chat_id=?", (user_chat_id,))
+            user_data = cursor.fetchall()
+            all_users.extend(user_data)
+        
+        all_users.sort(key=lambda x: (-x[3], x[2]))  # x[3] is ar and x[2] is uid
 
 
-    output = ""
-    keyboard = InlineKeyboardMarkup()
-    
-    for user_data in all_users:
-        ar, uid, nickname, username = user_data[3], user_data[2], user_data[4], user_data[1]
-        nickname = nickname.replace("#", "")
-        output += f"AR: {ar} UID: <code>{uid}</code> Nick: {nickname}\n"
-        if show_details:
-            output += f"Чтобы посмотреть персонажей <code>/card {uid}</code> "
+        output = ""
+        keyboard = InlineKeyboardMarkup()
+        
+        for user_data in all_users:
+            ar, uid, nickname, username = user_data[3], user_data[2], user_data[4], user_data[1]
+            nickname = nickname.replace("#", "")
+            output += f"AR: {ar} UID: <code>{uid}</code> Nick: {nickname}\n"
+            if show_details:
+                output += f"Чтобы посмотреть персонажей <code>/card {uid}</code> "
 
-    if output:
-        keyboard.add(InlineKeyboardButton(f"Добавить свой UID", url=f"https://t.me/akashauz_bot"))
-        await message.answer(output, reply_markup=keyboard, parse_mode=types.ParseMode.HTML)
-    else:
-        await message.answer("В этой группе нет пользователей из базы данных.")
+        if output:
+            keyboard.add(InlineKeyboardButton(f"Добавить свой UID", url=f"https://t.me/akashauz_bot"))
+            await message.answer(output, reply_markup=keyboard, parse_mode=types.ParseMode.HTML)
+        else:
+            await message.answer("В этой группе нет пользователей из базы данных.")
+            
+    else:  # Если чат приватный
+        cursor.execute("SELECT * FROM users")
+        result = cursor.fetchall()
+
+        output = ""
+        for row in result:
+            ar, uid, nickname, chat_id = row[3], row[2], row[4], row[6]
+            nickname = nickname.replace("#", "")
+            output += f"AR: {ar} UID: <code>{uid}</code> Nick: <a href='tg://user?id={chat_id}'>{nickname}</a>\n"
+        
+        if output:
+            await message.answer(output, parse_mode=types.ParseMode.HTML)
+        else:
+            await message.answer("В базе данных нет пользователей.")
 
 
 
