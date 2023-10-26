@@ -128,13 +128,6 @@ async def start_command(message: types.Message):
 
 
 async def uid_command(message: types.Message):
-    if message.chat.type not in [types.ChatType.PRIVATE]:
-        member = await bot.get_chat_member(chat_id=message.chat.id, user_id=bot.id)
-        if member.status != "administrator" or not member.can_delete_messages:
-            await message.answer("Пожалуйста, дайте мне права администратора для удаления сообщений.")
-            return
-
-        await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
     current_chat_id = message.chat.id
     args = message.get_args().split()
     show_details = False
@@ -142,8 +135,32 @@ async def uid_command(message: types.Message):
     if len(args) > 1:
         await message.answer("Неправильный формат команды. Попробуйте еще раз.")
         return
-    
-    if message.chat.type not in [types.ChatType.PRIVATE]:
+
+    if message.chat.type == types.ChatType.PRIVATE:
+        # Если чат приватный
+        cursor.execute("SELECT * FROM users")
+        result = cursor.fetchall()
+
+        output = ""
+        for row in result:
+            ar, uid, nickname, chat_id = row[3], row[2], row[4], row[6]
+            nickname = nickname.replace("#", "")
+            output += f"AR: {ar} UID: <code>{uid}</code> Nick: <a href='tg://user?id={chat_id}'>{nickname}</a>\n"
+        
+        if output:
+            await message.answer(output, parse_mode=types.ParseMode.HTML)
+        else:
+            await message.answer("В базе данных нет пользователей.")
+
+    else:  
+        # Для групповых чатов
+        member = await bot.get_chat_member(chat_id=message.chat.id, user_id=bot.id)
+        if member.status != "administrator" or not member.can_delete_messages:
+            await message.answer("Пожалуйста, дайте мне права администратора для удаления сообщений.")
+            return
+
+        await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+        
         # Получение всех chat_id из вашей базы данных
         cursor.execute("SELECT chat_id FROM users")
         users_in_db = cursor.fetchall()
@@ -167,7 +184,6 @@ async def uid_command(message: types.Message):
         
         all_users.sort(key=lambda x: (-x[3], x[2]))  # x[3] is ar and x[2] is uid
 
-
         output = ""
         keyboard = InlineKeyboardMarkup()
         
@@ -183,21 +199,7 @@ async def uid_command(message: types.Message):
             await message.answer(output, reply_markup=keyboard, parse_mode=types.ParseMode.HTML)
         else:
             await message.answer("В этой группе нет пользователей из базы данных.")
-            
-    else:  # Если чат приватный
-        cursor.execute("SELECT * FROM users")
-        result = cursor.fetchall()
 
-        output = ""
-        for row in result:
-            ar, uid, nickname, chat_id = row[3], row[2], row[4], row[6]
-            nickname = nickname.replace("#", "")
-            output += f"AR: {ar} UID: <code>{uid}</code> Nick: <a href='tg://user?id={chat_id}'>{nickname}</a>\n"
-        
-        if output:
-            await message.answer(output, parse_mode=types.ParseMode.HTML)
-        else:
-            await message.answer("В базе данных нет пользователей.")
 
 
 
