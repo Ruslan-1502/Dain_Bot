@@ -401,7 +401,7 @@ dp.register_callback_query_handler(process_character_callback, lambda c: c.data.
 
 @dp.message_handler(lambda message: message.text == 'Донат')
 async def donate_handler(message: types.Message):
-    await message.answer('https://t.me/genshin_donation/6')
+    await message.answer('https://t.me/genshin_donation/16')
     # здесь можно добавить код для выполнения других действий при нажатии на кнопку "Донат"
 
 @dp.message_handler(lambda message: message.text.startswith("/delete"))
