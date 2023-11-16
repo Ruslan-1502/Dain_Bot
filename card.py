@@ -13,11 +13,10 @@ from enkaprofile import encprofile
 import aiohttp
 import asyncio
 import logging
-logging.basicConfig(level=logging.INFO)  # Или DEBUG, если вам нужно больше информации
-
+logging.basicConfig(level=logging.INFO)  
 import sqlite3
 from database import create_connection
-# Создание объекта EnkaNetworkAPI
+# create object EnkaNetworkAPI
 enka_api = EnkaNetworkAPI()
 bot = None
 dp = None
