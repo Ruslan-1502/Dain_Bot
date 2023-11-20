@@ -22,6 +22,8 @@ from GetInfo import get_player
 from enkaprofile import encprofile
 from characters import characters
 from database import create_connection
+import sqlite3
+
 
 import asyncio
 import logging

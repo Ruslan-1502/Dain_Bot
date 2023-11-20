@@ -49,7 +49,7 @@ async def send_characters(message: types.Message, bot: Bot, locale: Language = L
     if not args:
         # Получаем chat_id пользователя из базы данных по его user_id
         user_id = message.from_user.id
-        conn = create_connection("users.db")
+        conn = create_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT chat_id FROM users WHERE user_id=?", (user_id,))
         result = cursor.fetchone()
