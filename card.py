@@ -40,39 +40,46 @@ def chunks(lst, n):
 last_card_message_id = None  # Переменная для хранения ID последнего сообщения с командой /card
 
 async def send_characters(message: types.Message, bot: Bot, locale: Language = Language.RU):
-    global last_card_message_id  # Объявляем, что будем использовать глобальную переменную
+    global last_card_message_id
 
     logging.info(f"Обработка сообщения от {message.from_user.id}")
     args = message.get_args()
 
+    # Если args пуст, значит, пользователь отправил только команду /card
     if not args:
-        await message.reply("Пожалуйста, введите идентификатор пользователя (UID), имя пользователя или имя после команды /card.")
-        return
-
-    uid = args
-
-    # Проверка, является ли args числом (т.е. UID)
-    if args.isdigit():
-        uid = int(args)
-    
-    # Если args не число, проверим, является ли это именем пользователя или первым именем
-    else:
-        conn = sqlite3.connect("users.db")
+        # Получаем chat_id пользователя из базы данных по его user_id
+        user_id = message.from_user.id
+        conn = create_connection("users.db")
         cursor = conn.cursor()
-
-        # Если args начинается с '@', считаем его именем пользователя
-        if args.startswith('@'):
-            username = args[1:]  # Удалите '@' из args
-            cursor.execute("SELECT uid FROM users WHERE username=?", (username,))
-        else:
-            # Иначе считаем его первым именем
-            cursor.execute("SELECT uid FROM users WHERE first_name=?", (args,))
-
+        cursor.execute("SELECT chat_id FROM users WHERE user_id=?", (user_id,))
         result = cursor.fetchone()
         conn.close()
 
         if result:
-            uid = result[0]  # Присвоим uid значение из базы данных
+            uid = result[0]
+        else:
+            await message.reply("Пожалуйста, введите идентификатор пользователя (UID), имя пользователя или имя после команды /card.")
+            return
+    else:
+        uid = args
+
+        if args.isdigit():
+            uid = int(args)
+        else:
+            conn = sqlite3.connect("users.db")
+            cursor = conn.cursor()
+
+            if args.startswith('@'):
+                username = args[1:]
+                cursor.execute("SELECT uid FROM users WHERE username=?", (username,))
+            else:
+                cursor.execute("SELECT uid FROM users WHERE first_name=?", (args,))
+
+            result = cursor.fetchone()
+            conn.close()
+
+            if result:
+                uid = result[0]
 
     # Если uid все еще None, мы не смогли найти пользователя
     if uid is None:

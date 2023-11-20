@@ -391,8 +391,10 @@ import card
 card.bot = bot
 card.dp = dp
 
-# Register the /card command handler
-dp.register_message_handler(lambda message: send_characters(message, bot), commands=['card'])
+@dp.message_handler(commands=['card'])
+async def card_command(message: types.Message):
+    await send_characters(message, bot)
+
 
 # Register the callback query handler for characters
 dp.register_callback_query_handler(process_character_callback, lambda c: c.data.startswith('character:'))
