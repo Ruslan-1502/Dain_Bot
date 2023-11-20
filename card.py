@@ -51,7 +51,7 @@ async def send_characters(message: types.Message, bot: Bot, locale: Language = L
         user_id = message.from_user.id
         conn = create_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT chat_id FROM users WHERE chat_id=?", (user_id,))
+        cursor.execute("SELECT uid FROM users WHERE chat_id=?", (user_id,))
         result = cursor.fetchone()
         conn.close()
 
@@ -66,7 +66,7 @@ async def send_characters(message: types.Message, bot: Bot, locale: Language = L
         if args.isdigit():
             uid = int(args)
         else:
-            conn = sqlite3.connect("users.db")
+            conn = create_connection()
             cursor = conn.cursor()
 
             if args.startswith('@'):
@@ -92,6 +92,7 @@ async def send_characters(message: types.Message, bot: Bot, locale: Language = L
     except Exception as e:
         await message.reply(f"Такого пользователя нет в Akasha или такого аккаунта с этим UID не существует")
         return
+
 
     if not user_data or not user_data.characters:
         await message.reply(f"Пользователь с UID {uid} не найден или у него закрытый стенд.")
