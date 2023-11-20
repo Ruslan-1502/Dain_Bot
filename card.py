@@ -51,7 +51,7 @@ async def send_characters(message: types.Message, bot: Bot, locale: Language = L
         user_id = message.from_user.id
         conn = create_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT chat_id FROM users WHERE user_id=?", (user_id,))
+        cursor.execute("SELECT chat_id FROM users WHERE chat_id=?", (user_id,))
         result = cursor.fetchone()
         conn.close()
 
