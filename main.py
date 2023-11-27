@@ -240,7 +240,7 @@ async def update_handler(message: types.Message):
 
 
 
-CHANNEL_ID = -1001800045281  # замените на ваше число
+CHANNEL_ID = -1001800045281  
 
 @dp.message_handler(commands=['gayd'])
 async def send_character_guide(message: types.Message):
