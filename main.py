@@ -9,9 +9,9 @@ from io import BytesIO
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiohttp import web
 #from aiogram.types import ChatType
-from aiogram.utils.exceptions import Unauthorized
-from aiogram.utils.exceptions import BadRequest
-from aiogram.utils.exceptions import MessageToDeleteNotFound
+#from aiogram.utils.exceptions import Unauthorized
+#from aiogram.utils.exceptions import BadRequest
+#from aiogram.utils.exceptions import MessageToDeleteNotFound
 from urllib.parse import quote
 from aiogram import Bot, Dispatcher, types
 from aiogram.dispatcher.webhook import SendMessage
@@ -68,17 +68,27 @@ async def check_membership(bot, message: types.Message, GROUP_ID):
     if message.chat.type != 'private' and message.chat.id not in GROUP_ID:
         await message.reply("Я работаю только в группе https://t.me/genshinimpact_uzb")
         return False
+
+    user_id = message.from_user.id
+    user_found = False
+
     for group_id in GROUP_ID:
         try:
-            member = await bot.get_chat_member(group_id, message.from_user.id)
+            member = await bot.get_chat_member(group_id, user_id)
             if member.status not in ['left', 'kicked']:
-                return True
-        except BadRequest:  # Fix applied here
-            continue  # If the user is not a member of the current group, check the next one
+                user_found = True
+                break
+        except Exception as e:
+            # Handle unexpected errors here, logging or other actions if needed
+            print(f"An unexpected error occurred: {e}")
 
-    await message.reply("Вы не являетесь участником группы https://t.me/genshinimpact_uzb.")
-    return False
-
+    if user_found:
+        return True
+    else:
+        await message.reply("Вы не являетесь участником группы https://t.me/genshinimpact_uzb.")
+        return False
+    
+    
 def get_region(uid):
     first_digit = int(str(uid)[0])
     if first_digit == 6:
