@@ -1,4 +1,4 @@
-pydantic==1.10.11
+pydantic==2.4.2
 pillow
 requests
 websockets
