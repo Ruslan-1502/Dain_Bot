@@ -8,7 +8,7 @@ import asyncio
 from io import BytesIO
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiohttp import web
-from aiogram.types import ChatType
+#from aiogram.types import ChatType
 from aiogram.utils.exceptions import Unauthorized
 from aiogram.utils.exceptions import BadRequest
 from aiogram.utils.exceptions import MessageToDeleteNotFound
@@ -315,7 +315,7 @@ async def saytlar_command(message: types.Message):
 @dp.message_handler(commands=['bot'])
 async def bot_command(message: types.Message):
     # Проверяем, является ли чат групповым
-    if message.chat.type not in [ChatType.PRIVATE]:
+    if message.chat.type not in [types.ChatType.PRIVATE]:
         # Получаем информацию о членстве бота в группе
         member = await bot.get_chat_member(chat_id=message.chat.id, user_id=bot.id)
         # Если бот не является администратором или не может удалять сообщения
