@@ -14,7 +14,7 @@ from aiohttp import web
 #from aiogram.utils.exceptions import MessageToDeleteNotFound
 from urllib.parse import quote
 from aiogram import Bot, Dispatcher, types
-from aiogram.dispatcher.webhook import SendMessage
+#from aiogram.dispatcher.webhook import SendMessage
 from aiogram.utils import executor, markdown
 from aiogram.types import ParseMode
 from config import BOT_TOKEN, WEBHOOK_URL, WEBAPP_HOST, WEBAPP_PORT,WEBHOOK_PATH,host,user,database,password
