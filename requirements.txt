@@ -5,4 +5,4 @@ websockets
 aiohttp
 aiogram
 enkacard
-enkanetwork.py==1.4.5
+enkanetwork.py==1.4.4
