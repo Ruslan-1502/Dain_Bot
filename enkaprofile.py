@@ -5,6 +5,7 @@ async def encprofile(uid):
     profile = None
     async with encbanner.ENC() as encard:
         try:
+            encbanner.update()
             ENCpy = await encard.enc(uids=uid)
             profile = await encard.profile(enc=ENCpy, image=True)
         except AttributeError:
