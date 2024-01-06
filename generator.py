@@ -79,7 +79,7 @@ def closed_const (element):
 
 
 async def generate_image(
-    data: EnkaNetworkResponse, character: CharacterInfo, locale: Language = Language.RU
+    data: EnkaNetworkResponse, character: CharacterInfo, locale: Language = Language.EN
 ):
     """Create language-specific asset-getter"""
     asset_reference = Assets(lang=locale)
