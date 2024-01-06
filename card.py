@@ -127,7 +127,7 @@ async def send_characters(message: types.Message, bot: Bot, locale: Language = L
 
         # Отправляем новый ответ на команду /card и сохраняем его message_id
         photo_bytes = result.tobytes()
-        photo = InputFile(photo_bytes, filename="card.png")
+        photo = InputFile(photo_bytes, filename="card_no_spaces.png")
         sent_message = await bot.send_photo(chat_id=chat_id, photo=photo, caption=caption_text, reply_markup=keyboard, 
                                 parse_mode=types.ParseMode.HTML)
         last_card_message_id = sent_message.message_id
