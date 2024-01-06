@@ -111,22 +111,18 @@ async def send_characters(message: types.Message, bot: Bot, locale: Language = L
         keyboard.row(*row_buttons)
     caption_text = f"Выберите персонажа:<code>{uid}</code> "
     result = await encprofile(uid)
-    if result and 'img' in result:
-        photo = result['img']
-        image_output = BytesIO()
-        photo.save(image_output, format='PNG')
-        image_output.seek(0)
+
 
         # Исправлено: получаем chat_id из объекта message
-        chat_id = message.chat.id
+    chat_id = message.chat.id
 
-        # Удаляем предыдущий ответ на команду /card (если он существует)
-        if last_card_message_id:
-            try:
-                await bot.delete_message(chat_id=chat_id, message_id=last_card_message_id)
-            except Exception as e:
-                logging.error(f"Ошибка при удалении предыдущего ответа на команду /card: {e}")
-                traceback.print_exc()
+    # Удаляем предыдущий ответ на команду /card (если он существует)
+    if last_card_message_id:
+        try:
+            await bot.delete_message(chat_id=chat_id, message_id=last_card_message_id)
+        except Exception as e:
+            logging.error(f"Ошибка при удалении предыдущего ответа на команду /card: {e}")
+            traceback.print_exc()
 
         # Отправляем новый ответ на команду /card и сохраняем его message_id
         sent_message = await bot.send_photo(chat_id=chat_id, photo=image_output, caption=caption_text, reply_markup=keyboard, 
