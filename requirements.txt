@@ -4,5 +4,5 @@ requests
 websockets
 aiohttp
 aiogram
-enkacard
+enkacard==3.2.4
 enkanetwork.py==1.4.4
