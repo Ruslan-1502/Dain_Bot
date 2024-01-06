@@ -4,6 +4,6 @@ requests
 websockets
 aiohttp
 aiogram
-enkanetwork.py==1.4.4
-enkacard==1.1.8
+enkanetwork.py==1.4.5
+enkacard==3.2.4
 
