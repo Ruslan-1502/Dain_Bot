@@ -1,8 +1,8 @@
 from enkacard import encbanner
 import asyncio
 
-async def encprofile(uid):
-    async with encbanner.ENC(uids = uid) as encard:
+async def encprofile(uids):
+    async with encbanner.ENC(uid = uids) as encard:
         return await encard.profile(card = True)
 
 
