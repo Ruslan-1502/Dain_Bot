@@ -125,7 +125,7 @@ async def send_characters(message: types.Message, bot: Bot, locale: Language = L
             traceback.print_exc()
 
         # Отправляем новый ответ на команду /card и сохраняем его message_id
-        sent_message = await bot.send_photo(chat_id=chat_id, photo=image_output, caption=caption_text, reply_markup=keyboard, 
+        sent_message = await bot.send_photo(chat_id=chat_id, photo=result, caption=caption_text, reply_markup=keyboard, 
                              parse_mode=types.ParseMode.HTML)
         last_card_message_id = sent_message.message_id
     else:
