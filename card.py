@@ -41,7 +41,7 @@ def chunks(lst, n):
 
 last_card_message_id = None  # Переменная для хранения ID последнего сообщения с командой /card
 
-async def send_characters(message: types.Message, bot: Bot, locale: Language = Language.RU):
+async def send_characters(message: types.Message, bot: Bot):
     global last_card_message_id
 
     logging.info(f"Обработка сообщения от {message.from_user.id}")
