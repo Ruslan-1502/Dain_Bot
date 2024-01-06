@@ -3,6 +3,7 @@ from aiogram.dispatcher import Dispatcher
 from aiogram.types import InputFile
 import html
 import traceback
+import time
 
 from enkanetwork import EnkaNetworkAPI,Assets, EnkaNetworkResponse, Language
 from enkanetwork.model.character import CharacterInfo
@@ -125,15 +126,17 @@ async def send_characters(message: types.Message, bot: Bot, locale: Language = L
             logging.error(f"Ошибка при удалении предыдущего ответа на команду /card: {e}")
             traceback.print_exc()
 
-        # Отправляем новый ответ на команду /card и сохраняем его message_id
-        photo_bytes = result.tobytes()
-        photo = InputFile(photo_bytes, filename="card_no_spaces.png")
+        # Сохраняем изображение
+        filename = f"player_card_{int(time.time())}.png"
+        result.save(filename)
+
+        # Отправляем изображение в Telegram
+        photo = InputFile(filename)
         sent_message = await bot.send_photo(chat_id=chat_id, photo=photo, caption=caption_text, reply_markup=keyboard, 
-                                parse_mode=types.ParseMode.HTML)
+                                    parse_mode=types.ParseMode.HTML)
         last_card_message_id = sent_message.message_id
     else:
         await message.reply(caption_text, reply_markup=keyboard, parse_mode=types.ParseMode.HTML)
-
 
 
 
