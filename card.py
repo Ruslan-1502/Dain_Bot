@@ -115,11 +115,10 @@ async def send_characters(message: types.Message, bot: Bot):
         keyboard.row(*row_buttons)
     caption_text = f"Выберите персонажа:<code>{uid}</code> "
     result = await encprofile(uid)
-    extension = result.split('.')[-1]
 
 
 
-    if extension == 'jpg':
+    if result:
 
         # Исправлено: получаем chat_id из объекта message
         chat_id = message.chat.id
