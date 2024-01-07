@@ -1,5 +1,4 @@
-import aiogram
-from aiogram.exceptions import MessageNotFound
+
 from aiogram import types, Dispatcher, Bot, executor, filters
 from aiogram.dispatcher import Dispatcher
 from aiogram.types import InputFile
@@ -123,6 +122,8 @@ async def send_characters(message: types.Message, bot: Bot):
 
     # Удаляем предыдущий ответ на команду /card (если он существует)
     # Проверяем, существует ли сообщение с указанным идентификатором
+    import aiogram
+    from aiogram.exceptions import MessageNotFound
     if last_card_message_id:
         try:
             await bot.get_message(chat_id=chat_id, message_id=last_card_message_id)
