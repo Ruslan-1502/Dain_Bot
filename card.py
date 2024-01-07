@@ -120,13 +120,11 @@ async def send_characters(message: types.Message, bot: Bot):
         # Исправлено: получаем chat_id из объекта message
     chat_id = message.chat.id
 
-    # Удаляем предыдущий ответ на команду /card (если он существует)
-    # Проверяем, существует ли сообщение с указанным идентификатором
-    import aiogram
-    if last_card_message_id:
-        await bot.delete_message(chat_id=chat_id, message_id=last_card_message_id)
-        last_card_message_id = None
+    # Получаем идентификатор последнего сообщения, если он существует
+    last_card_message_id = message.reply_to_message.message_id if message.reply_to_message else None
 
+    # Если идентификатор существует, пытаемся удалить сообщение
+    is_deleted = await bot.delete_message(chat_id=chat_id, message_id=last_card_message_id)
     # Сохраняем изображение
     filename = f"player_card_{int(time.time())}.png"
     result.save(filename)
