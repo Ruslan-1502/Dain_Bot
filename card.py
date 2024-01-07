@@ -124,13 +124,8 @@ async def send_characters(message: types.Message, bot: Bot):
     # Проверяем, существует ли сообщение с указанным идентификатором
     import aiogram
     if last_card_message_id:
-        # Если существует, то проверяем, не прошло ли с момента его отправки более 10 минут
-        try:
-            await bot.get_message(chat_id=chat_id, message_id=last_card_message_id, timeout=10)
-        except asyncio.TimeoutError:
-            # Сообщение устарело, удаляем его
-            await bot.delete_message(chat_id=chat_id, message_id=last_card_message_id)
-            last_card_message_id = None
+        await bot.delete_message(chat_id=chat_id, message_id=last_card_message_id)
+        last_card_message_id = None
 
     # Сохраняем изображение
     filename = f"player_card_{int(time.time())}.png"
