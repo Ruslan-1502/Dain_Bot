@@ -115,27 +115,33 @@ async def send_characters(message: types.Message, bot: Bot):
         keyboard.row(*row_buttons)
     caption_text = f"Выберите персонажа:<code>{uid}</code> "
     result = await encprofile(uid)
+    extension = result.split('.')[-1]
 
+
+
+    if extension == 'jpg':
 
         # Исправлено: получаем chat_id из объекта message
-    chat_id = message.chat.id
+        chat_id = message.chat.id
 
-    # Удаляем предыдущий ответ на команду /card (если он существует)
-    # Проверяем, существует ли сообщение с указанным идентификатором
-    if last_card_message_id:
-        await bot.delete_message(chat_id=chat_id, message_id=last_card_message_id)
-        last_card_message_id = None
-    
-    # Сохраняем изображение
-    filename = f"player_card_{int(time.time())}.png"
-    result.save(filename)
+        # Удаляем предыдущий ответ на команду /card (если он существует)
+        if last_card_message_id:
+            try:
+                await bot.delete_message(chat_id=chat_id, message_id=last_card_message_id)
+            except Exception as e:
+                logging.error(f"Ошибка при удалении предыдущего ответа на команду /card: {e}")
+                traceback.print_exc()
+        # Сохраняем изображение
+        filename = f"player_card_{int(time.time())}.png"
+        result.save(filename)
 
-    # Отправляем изображение в Telegram
-    photo = InputFile(filename)
-    sent_message = await bot.send_photo(chat_id=chat_id, photo=photo, caption=caption_text, reply_markup=keyboard, 
-                                parse_mode=types.ParseMode.HTML)
-    last_card_message_id = sent_message.message_id
-
+        # Отправляем изображение в Telegram
+        photo = InputFile(filename)
+        sent_message = await bot.send_photo(chat_id=chat_id, photo=photo, caption=caption_text, reply_markup=keyboard, 
+                                    parse_mode=types.ParseMode.HTML)
+        last_card_message_id = sent_message.message_id
+    else:
+        await message.reply(caption_text, reply_markup=keyboard, parse_mode=types.ParseMode.HTML)
 
 
 
