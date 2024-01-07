@@ -123,14 +123,14 @@ async def send_characters(message: types.Message, bot: Bot):
     # Удаляем предыдущий ответ на команду /card (если он существует)
     # Проверяем, существует ли сообщение с указанным идентификатором
     import aiogram
-    from aiogram.exceptions import MessageNotFound
     if last_card_message_id:
+        # Если существует, то проверяем, не прошло ли с момента его отправки более 10 минут
         try:
-            await bot.get_message(chat_id=chat_id, message_id=last_card_message_id)
-        except aiogram.exceptions.MessageNotFound:
-            # Сообщение не существует, удалять нечего
+            await bot.get_message(chat_id=chat_id, message_id=last_card_message_id, timeout=10)
+        except asyncio.TimeoutError:
+            # Сообщение устарело, удаляем его
+            await bot.delete_message(chat_id=chat_id, message_id=last_card_message_id)
             last_card_message_id = None
-            logging.error(f"Ошибка при удалении предыдущего ответа на команду /card: {e}")
 
     # Сохраняем изображение
     filename = f"player_card_{int(time.time())}.png"
