@@ -122,7 +122,6 @@ async def send_characters(message: types.Message, bot: Bot):
 
     # Удаляем предыдущий ответ на команду /card (если он существует)
     # Проверяем, существует ли сообщение с указанным идентификатором
-    import aiogram
     if last_card_message_id:
         await bot.delete_message(chat_id=chat_id, message_id=last_card_message_id)
         last_card_message_id = None
