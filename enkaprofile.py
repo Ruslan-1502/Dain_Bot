@@ -4,8 +4,11 @@ import asyncio
 async def encprofile(uids):
     await encbanner.update()
     async with encbanner.ENC(uid=uids) as encard:
-        image = await encard.profile(card=True, teamplate=1)
-        card_image = image.card
+        try:
+            image = await encard.profile(card=True, teamplate=1)
+            card_image = image.card
+        except TypeError as e:
+            return None
         return card_image
     # profile = None
     # async with encbanner.ENC() as encard:
