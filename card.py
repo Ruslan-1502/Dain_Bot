@@ -116,7 +116,10 @@ async def send_characters(message: types.Message, bot: Bot):
     caption_text = f"Выберите персонажа:<code>{uid}</code> "
     result = await encprofile(uid)
 
-    if result:
+
+
+    if result is not None:
+
         # Исправлено: получаем chat_id из объекта message
         chat_id = message.chat.id
 
@@ -127,28 +130,18 @@ async def send_characters(message: types.Message, bot: Bot):
             except Exception as e:
                 logging.error(f"Ошибка при удалении предыдущего ответа на команду /card: {e}")
                 traceback.print_exc()
-
         # Сохраняем изображение
         filename = f"player_card_{int(time.time())}.png"
         result.save(filename)
 
         # Отправляем изображение в Telegram
-        try:
-            photo = InputFile(filename)
-            sent_message = await bot.send_photo(
-                chat_id=chat_id,
-                photo=photo,
-                caption=caption_text,
-                reply_markup=keyboard,
-                parse_mode=types.ParseMode.HTML
-            )
-            last_card_message_id = sent_message.message_id
-        except Exception as e:
-            logging.error(f"Ошибка при отправке изображения: {e}")
-            traceback.print_exc()
-            await message.reply("Произошла ошибка при отправке изображения.")
+        photo = InputFile(filename)
+        sent_message = await bot.send_photo(chat_id=chat_id, photo=photo, caption=caption_text, reply_markup=keyboard, 
+                                    parse_mode=types.ParseMode.HTML)
+        last_card_message_id = sent_message.message_id
     else:
         await message.reply(caption_text, reply_markup=keyboard, parse_mode=types.ParseMode.HTML)
+
 
 
 async def process_character_callback(callback_query: types.CallbackQuery):
