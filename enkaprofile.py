@@ -8,7 +8,7 @@ async def encprofile(uids):
             image = await encard.profile(card=True, teamplate=1)
             card_image = image.card
         except TypeError as e:
-            return None
+            pass
         return card_image
     # profile = None
     # async with encbanner.ENC() as encard:
