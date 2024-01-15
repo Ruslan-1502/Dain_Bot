@@ -7,8 +7,9 @@ async def encprofile(uids):
         try:
             image = await encard.profile(card=True, teamplate=1)
             card_image = image.card
-        except TypeError as e:
-            pass
+        except Exception as e:
+            card_image = None
+            print(f"Произошла ошибка при создании карты: {e}")
         return card_image
     # profile = None
     # async with encbanner.ENC() as encard:
