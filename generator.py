@@ -10,7 +10,7 @@ from enkanetwork.model.character import CharacterInfo
 from enkanetwork.model.equipments import Equipments, EquipmentsType, EquipType
 from PIL import Image, ImageChops, ImageDraw, ImageEnhance
 
-import aiohttp
+
 import asyncio
 
 from prop_reference import RARITY_REFERENCE, SUBST_ORDER

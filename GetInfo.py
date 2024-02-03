@@ -1,7 +1,7 @@
 import asyncio
 from enkanetwork import EnkaNetworkAPI
 from enkanetwork.exception import EnkaPlayerNotFound
-from aiohttp.client_exceptions import ClientOSError
+
 
 client = EnkaNetworkAPI()
 

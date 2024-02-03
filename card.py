@@ -14,7 +14,7 @@ import io
 from io import BytesIO
 from enkaprofile import encprofile
 
-import aiohttp
+
 import asyncio
 import logging
 logging.basicConfig(level=logging.INFO)  

@@ -3,7 +3,6 @@ import re
 import asyncio
 import html
 import aiogram
-import aiohttp
 import asyncio
 from io import BytesIO
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton

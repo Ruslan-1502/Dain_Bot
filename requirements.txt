@@ -2,7 +2,6 @@ pydantic==1.10.13
 pillow
 requests
 websockets
-aiohttp
 aiogram
 enkanetwork.py==1.4.5
 enkacard==3.2.4
