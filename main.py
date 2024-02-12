@@ -293,7 +293,8 @@ async def saytlar_command(message: types.Message):
         await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
 
     sites = [
-        
+        '[honeyhunterworld](https://genshin.honeyhunterworld.com/?lang=RU) - Энциклопедия'
+        'hakush.in - Энциклопедия GI, HSR'
         'ambr.top/ru - Энциклопедия',
         'akasha.cv - Топ вайфу мира',
         'enka.network - Билды персонажей',
