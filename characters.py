@@ -244,7 +244,7 @@ characters = {
     #'cянь юнь': 178,
     'cяньюнь':178,
     'xianyun':178,
-    'xian yun':178,
+    #'xian yun':178,
     'gaming': 179,
     'kaming': 179,
     #'ka min': 179,
