@@ -120,7 +120,7 @@ async def generate_image(
         foreground.paste(character_art, (20, 20), character_art)
     elif character.id == 10000093:
         character_art = scale_image(character_art, fixed_percent=50)
-        foreground.paste(character_art, (-140, 0), character_art)
+        foreground.paste(character_art, (-140, -30), character_art)
     else :
         character_art = scale_image(character_art, fixed_percent=90)
         character_art = character_art.crop(
