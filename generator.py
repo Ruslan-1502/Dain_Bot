@@ -113,7 +113,7 @@ async def generate_image(
     """ FIRST TRIMESTER """
     character_art = open_image(
         path=f"attributes/Genshin/Gacha/{character.image.banner.filename}.png",
-        asset_url=None,
+        asset_url=character.image.banner.url,
     )
     character_art = scale_image(character_art, fixed_percent=90)
     character_art = character_art.crop(
@@ -121,7 +121,7 @@ async def generate_image(
     )
     character_art = fade_character_art(character_art)
 
-    foreground.paste(character_art, (80, 0), character_art)
+    foreground.paste(character_art, (0, 0), character_art)
 
     character_shade = open_image("attributes/Assets/enka_character_shade.png")
     foreground.paste(character_shade, (0, 0), character_shade)
