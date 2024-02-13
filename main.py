@@ -405,6 +405,7 @@ card.dp = dp
 
 @dp.message_handler(commands=['card'])
 async def card_command(message: types.Message):
+    await enka_api.update_assets()
     await send_characters(message, bot)
 
 

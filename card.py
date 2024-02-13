@@ -27,6 +27,7 @@ dp = None
 
 
 async def send_generated_image(chat_id, image_bytes, caption):
+    await enka_api.update_assets()
     try:
         logging.info(f"Отправка изображения в чат {chat_id}")
         image_io = io.BytesIO(image_bytes)
