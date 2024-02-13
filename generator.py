@@ -113,7 +113,7 @@ async def generate_image(
     """ FIRST TRIMESTER """
     character_art = open_image(
         path=f"attributes/Genshin/Gacha/{character.image.banner.filename}.png",
-        asset_url="https://enka.network/ui/UI_Gacha_AvatarImg_{character.name}",
+        asset_url="https://enka.network/ui/UI_Gacha_AvatarImg_{character.name}.png",
     )
     character_art = scale_image(character_art, fixed_percent=90)
     character_art = character_art.crop(
