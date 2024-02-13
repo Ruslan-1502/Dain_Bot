@@ -115,11 +115,16 @@ async def generate_image(
         path=f"attributes/Genshin/Gacha/{character.image.banner.filename}.png",
         asset_url=character.image.banner.url,
     )
-    character_art = scale_image(character_art, fixed_percent=90)
-    character_art = character_art.crop(
-        (615, 85, character_art.width, character_art.height)
-    )
-    character_art = fade_character_art(character_art)
+    if character.id == '10000092':
+        character_art = scale_image(character_art, fixed_percent=60)
+        foreground.paste(character_art, (20, 20), character_art)
+
+    else :
+        character_art = scale_image(character_art, fixed_percent=90)
+        character_art = character_art.crop(
+            (615, 85, character_art.width, character_art.height)
+        )
+        character_art = fade_character_art(character_art)
 
     foreground.paste(character_art, (0, 0), character_art)
 
