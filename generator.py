@@ -115,7 +115,7 @@ async def generate_image(
         path=f"attributes/Genshin/Gacha/{character.image.banner.filename}.png",
         asset_url=character.image.banner.url,
     )
-    if character.id == '10000092':
+    if character.id == 10000092:
         character_art = scale_image(character_art, fixed_percent=60)
         foreground.paste(character_art, (20, 20), character_art)
 
