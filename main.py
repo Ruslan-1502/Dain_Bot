@@ -149,9 +149,30 @@ async def uid_command(message: types.Message):
 
     if message.chat.type == types.ChatType.PRIVATE:
         # Если чат приватный
-        cursor.execute("SELECT * FROM users")
+        if len(args) == 0:
+            cursor.execute("SELECT * FROM users")
+        elif len(args) == 1:
+            query = args[0]
+            if query.startswith("@"):
+                username = query[1:]
+                cursor.execute("SELECT * FROM users WHERE username=?", (username,))
+                show_details = True
+            elif query in ["asia", "euro", "america", "sar"]: # Or whatever your valid regions are
+                region = query
+                cursor.execute("SELECT * FROM users WHERE region=? ORDER BY ar DESC, uid ASC", (region,))
+            else:
+                first_name = query
+                cursor.execute("SELECT * FROM users WHERE first_name=?", (first_name,))
+                show_details = True
+        else:
+            await message.answer("Неправильный формат команды. Попробуйте еще раз.")
+            return
+        
         result = cursor.fetchall()
-
+        if len(result) == 0:
+            await message.answer("Не найдено пользователей.")
+            return
+        
         output = ""
         for row in result:
             ar, uid, nickname, chat_id = row[3], row[2], row[4], row[6]
