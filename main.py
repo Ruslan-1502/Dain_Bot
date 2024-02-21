@@ -167,18 +167,15 @@ async def uid_command(message: types.Message):
         else:
             await message.answer("Неправильный формат команды. Попробуйте еще раз.")
             return
-        
         result = cursor.fetchall()
         if len(result) == 0:
             await message.answer("Не найдено пользователей.")
             return
-        
         output = ""
         for row in result:
             ar, uid, nickname, chat_id = row[3], row[2], row[4], row[6]
             nickname = nickname.replace("#", "")
             output += f"AR: {ar} UID: <code>{uid}</code> Nick: <a href='tg://user?id={chat_id}'>{nickname}</a>\n"
-        
         if output:
             await message.answer(output, parse_mode=types.ParseMode.HTML)
         else:
@@ -481,6 +478,18 @@ async def process_input_handler(message: types.Message):
     success = await add_uid(uid, chat_id, username, first_name)
     if success:
         await message.reply("UID успешно добавлен!")
+        cursor.execute("SELECT * FROM users WHERE chat_id=?", (chat_id,))
+        result = cursor.fetchall()
+        if len(result) == 0:
+            await message.answer("Не найдено пользователей.")
+            return
+        output = ""
+        for row in result:
+            ar, uid, nickname, chat_id = row[3], row[2], row[4], row[6]
+            nickname = nickname.replace("#", "")
+            output += f"AR: {ar} UID: <code>{uid}</code> Nick: <a href='tg://user?id={chat_id}'>{nickname}</a>\n"
+        if output:
+            await message.answer(output, parse_mode=types.ParseMode.HTML)
         await send_db()
     else:
         await message.reply("UID не существует или уже добавлен в базу данных.")
