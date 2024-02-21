@@ -478,7 +478,7 @@ async def process_input_handler(message: types.Message):
     success = await add_uid(uid, chat_id, username, first_name)
     if success:
         await message.reply("UID успешно добавлен!")
-        cursor.execute("SELECT * FROM users WHERE chat_id=?", (chat_id,))
+        cursor.execute("SELECT * FROM users WHERE uid=?", (uid,))
         result = cursor.fetchall()
         if len(result) == 0:
             await message.answer("Не найдено пользователей.")
